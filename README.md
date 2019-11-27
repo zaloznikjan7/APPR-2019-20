@@ -17,9 +17,13 @@ Cilj moje projektne naloge je analizirati "najboljšo" ligo na svetu in ugotovit
 
 Viri:
 https://datahub.io/sports-data/english-premier-league
+
 https://www.transfermarkt.com
+
 https://en.wikipedia.org/wiki/Premier_League
+
 https://github.com/ewenme/transfers/tree/master/data
+
 https://www.kaggle.com/zaeemnalla/premier-league/version/1
 
 ## Program
