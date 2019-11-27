@@ -13,8 +13,14 @@ Pri tem projektu bom analizira prvo angleško ligo v zadnjih letih in dodal še 
 
 Poglobil se bom v ekipo Manchester Uniteda in analiziral osnovne nogometne statistike vsakega igralca ter dodal tržno vrednost posameznikov. Tako bom tudi ocenil vrednost kluba skozi leta in prikazal tudi nekaj najdražjih nakupov ter prodaj.
 
-Cilj moje projektne naloge analizirati meni najboljšo ligo na svetu in ugotoviti, zakaj je ravno ta liga po mnenju mnogih najboljša in najmanj predvidljiva. Podroben pogled bom pa namenil Manchester Unitedu, ki je v zadnjih nekaj letih naredil veliko strateških napak in posledično se to pozna na vrednosti ekipe, torej me zanima, če in koliko so padle cene igralcev. Zanima me tudi, če so na novo pripeljani igralci dobro vključili v ekipo, torej imeli veliko igralnih minut in dobro statistiko. 
+Cilj moje projektne naloge je analizirati "najboljšo" ligo na svetu in ugotoviti, zakaj je ravno ta liga po mnenju mnogih najboljša in najmanj predvidljiva. Podroben pogled bom pa namenil Manchester Unitedu, ki je v zadnjih nekaj letih naredil veliko strateških napak in posledično se to pozna na vrednosti ekipe, torej me zanima, če in koliko so padle cene igralcev. Zanima me tudi, če so na novo pripeljani igralci dobro vključili v ekipo, torej imeli veliko igralnih minut in dobro statistiko. 
 
+Viri:
+https://datahub.io/sports-data/english-premier-league
+https://www.transfermarkt.com
+https://en.wikipedia.org/wiki/Premier_League
+https://github.com/ewenme/transfers/tree/master/data
+https://www.kaggle.com/zaeemnalla/premier-league/version/1
 
 ## Program
 
