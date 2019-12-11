@@ -74,7 +74,7 @@ druzine <- uvozi.druzine(levels(obcine$obcina))
 
 
 
-
+# Ko uvoziš nov csv, ko delaš path kak prit do datoteke kak greš eno mapo nazaj? 
 # Nove spremenljivke sam ne delajo, a jih sploh spremenim ker so tak dolge? 
 # A lahk napišeš funkcijo, ko spremeni ime datoteke?, al rabim 10 različnih? 
 # Kk je s ttimi knjižnicami? A je bajboljš da vedno vse poženem?? 
@@ -96,7 +96,7 @@ uvozi.podatke <- function() {
            Zadetki_gostujoca_ekipa_počas = HTAG, Rezultat_polčas= HTR, Sodnik = Referee, Streli_domači = HS, Streli_gosti = AS, Streli_domači_v_okvir = HST, Streli_gosti_v_okvir = AST,
            Prekrški_domači = HF, Prekrški_gostje = AF, Koti_domači= HC, Koti_gostje= AF, Rumeni_karton_domači = HY, Rumeni_karton_gostje = AY, Rdeč_karton_domači= HR, Rdeč_karton_gostje = AR,
            Kvota_zmaga_domačin= B365H, Kvota_neodločeno = B365D, Kvota_zamga_gost = B365A)
-  Počiščeni_podatki %>% write.csv2("podatki/Očiščeni_podatki_1819",fileEncoding = "utf8")
+  Počiščeni_podatki %>% write.csv2("podatki/Očiščeni_podatki_1819.csv",fileEncoding = "utf8")
   Počiščeni_podatki
 }
 
