@@ -1,4 +1,21 @@
 # 2. faza: Uvoz podatkov
+library(dplyr)
+library(knitr)
+library(rmarkdown)
+library(shiny)
+library(DT)
+library(rgdal)
+library(rgeos)
+library(digest)
+library(readr)
+library(rvest)
+library(tidyr)
+library(dplyr)
+library(gsubfn)
+library(ggplot2)
+library(mosaic)
+library(maptools)
+library(extrafont) 
 
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 
@@ -53,3 +70,37 @@ druzine <- uvozi.druzine(levels(obcine$obcina))
 # datoteko, tukaj pa bi klicali tiste, ki jih potrebujemo v
 # 2. fazi. Seveda bi morali ustrezno datoteko uvoziti v prihodnjih
 # fazah.
+
+
+
+
+
+# Nove spremenljivke sam ne delajo, a jih sploh spremenim ker so tak dolge? 
+# A lahk napišeš funkcijo, ko spremeni ime datoteke?, al rabim 10 različnih? 
+# Kk je s ttimi knjižnicami? A je bajboljš da vedno vse poženem?? 
+# Pojma nimam kak to prebere HTML, pač tte občine kak nastaviš da od neki naprej bere in kak veš od kje do kje more it? 
+# A morem js zaj to združit skup al ne ker ne gre to tak ko na vajah, ker je miljon podatkov 
+# A morem naredit parse_noumber in kak če je tega zelo velik?
+# 
+# nova_imena = c(Domača_ekipa = HomeTeam, Gostujoča_ekipa = AwayTeam, Zadetki_domača_ekipa = FTHG, Zadetki_gostujoca_ekipa = FTAG, Rezultat = FTR, Zadetki_domača_ekipa_polčas = HTHG,
+#                Zadetki_gostujoca_ekipa_počas = HTAG, Rezultat_polčas= HTR, Sodnik = Referee, Streli_domači = HS, Streli_gosti = AS, Streli_domači_v_okvir = HST, Streli_gosti_v_okvir = AST,
+#                Prekrški_domači = HF, Prekrški_gostje = AF, Koti_domači= HC, Koti_gostje= AF, Rumeni_karton_domači = HY, Rumeni_karton_gostje = AY, Rdeč_karton_domači= HR, Rdeč_karton_gostje = AR,
+#                Kvota_zmaga_domačin= B365H, Kvota_neodločeno = B365D, Kvota_zamga_gost = B365A)
+# kaj_obravnavam = c(HomeTeam,AwayTeam,FTHG,FTAG,FTR, HTHG, HTAG, HTR, Referee, HS, AS, HST, AST, HF, AF, HC, AC, HF, AF, HY, AY, HR, AR, B365H, B365D, B365A)
+
+# Funkcija, ki uvozi podatke in jih počisti:
+uvozi.podatke <- function() {
+  Sezona1819 <- read_csv("podatki/season-1819.csv", locale=locale(encoding="utf8"))
+  Počiščeni_podatki <- Sezona1819 %>% select(HomeTeam,AwayTeam,FTHG,FTAG,FTR, HTHG, HTAG, HTR, Referee, HS, AS, HST, AST, HF, AF, HC, AC, HF, AF, HY, AY, HR, AR, B365H, B365D, B365A) %>%
+    rename(Domača_ekipa = HomeTeam, Gostujoča_ekipa = AwayTeam, Zadetki_domača_ekipa = FTHG, Zadetki_gostujoca_ekipa = FTAG, Rezultat = FTR, Zadetki_domača_ekipa_polčas = HTHG,
+           Zadetki_gostujoca_ekipa_počas = HTAG, Rezultat_polčas= HTR, Sodnik = Referee, Streli_domači = HS, Streli_gosti = AS, Streli_domači_v_okvir = HST, Streli_gosti_v_okvir = AST,
+           Prekrški_domači = HF, Prekrški_gostje = AF, Koti_domači= HC, Koti_gostje= AF, Rumeni_karton_domači = HY, Rumeni_karton_gostje = AY, Rdeč_karton_domači= HR, Rdeč_karton_gostje = AR,
+           Kvota_zmaga_domačin= B365H, Kvota_neodločeno = B365D, Kvota_zamga_gost = B365A)
+  Počiščeni_podatki %>% write.csv2("podatki/Očiščeni_podatki_1819",fileEncoding = "utf8")
+  Počiščeni_podatki
+}
+
+Sezona.1819 <- uvozi.podatke()
+  
+  
+  
