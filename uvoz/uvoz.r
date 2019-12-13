@@ -82,11 +82,11 @@ library(extrafont)
 # A morem js zaj to združit skup al ne ker ne gre to tak ko na vajah, ker je miljon podatkov 
 # A morem naredit parse_noumber in kak če je tega zelo velik?
 # 
-# nova_imena = c(Domača_ekipa = HomeTeam, Gostujoča_ekipa = AwayTeam, Zadetki_domača_ekipa = FTHG, Zadetki_gostujoca_ekipa = FTAG, Rezultat = FTR, Zadetki_domača_ekipa_polčas = HTHG,
-#                Zadetki_gostujoca_ekipa_počas = HTAG, Rezultat_polčas= HTR, Sodnik = Referee, Streli_domači = HS, Streli_gosti = AS, Streli_domači_v_okvir = HST, Streli_gosti_v_okvir = AST,
-#                Prekrški_domači = HF, Prekrški_gostje = AF, Koti_domači= HC, Koti_gostje= AF, Rumeni_karton_domači = HY, Rumeni_karton_gostje = AY, Rdeč_karton_domači= HR, Rdeč_karton_gostje = AR,
-#                Kvota_zmaga_domačin= B365H, Kvota_neodločeno = B365D, Kvota_zamga_gost = B365A)
-# kaj_obravnavam = c(HomeTeam,AwayTeam,FTHG,FTAG,FTR, HTHG, HTAG, HTR, Referee, HS, AS, HST, AST, HF, AF, HC, AC, HF, AF, HY, AY, HR, AR, B365H, B365D, B365A)
+nova_imena = c("Domača_ekipa" = "HomeTeam", "Gostujoča_ekipa" = "AwayTeam", "Zadetki_domača_ekipa" = "FTHG", "Zadetki_gostujoca_ekipa" = "FTAG", "Rezultat" = "FTR", "Zadetki_domača_ekipa_polčas" = "HTHG",
+               "Zadetki_gostujoca_ekipa_počas" = "HTAG", "Rezultat_polčas" = "HTR", "Sodnik" = "Referee", "Streli_domači" = "HS", "Streli_gosti" = "AS", "Streli_domači_v_okvir" = "HST", "Streli_gosti_v_okvir" = "AST",
+               "Prekrški_domači" = "HF", "Prekrški_gostje" = "AF", "Koti_domači" = "HC", "Koti_gostje" = "AF", "Rumeni_karton_domači" = "HY", "Rumeni_karton_gostje" = "AY", "Rdeč_karton_domači"= "HR", "Rdeč_karton_gostje" = "AR",
+               "Kvota_zmaga_domačin" = "B365H", "Kvota_neodločeno" = "B365D", "Kvota_zamga_gost" = "B365A")
+kaj_obravnavam = c("HomeTeam","AwayTeam","FTHG","FTAG","FTR", "HTHG", "HTAG", "HTR", "Referee", "HS", "AS", "HST", "AST", "HF", "AF", "HC", "AC", "HF", "AF", "HY", "AY", "HR", "AR", "B365H", "B365D", "B365A")
 
 # Funkcija, ki uvozi podatke in jih počisti:
 uvozi.podatke <- function() {
@@ -94,11 +94,8 @@ uvozi.podatke <- function() {
   for (i in 9:18) {
     datoteka <- sprintf("podatki/season-%02d%02d.csv", i, i+1)
     Sezona <- read_csv(datoteka, locale=locale(encoding="utf8")) %>%
-      select(HomeTeam,AwayTeam,FTHG,FTAG,FTR, HTHG, HTAG, HTR, Referee, HS, AS, HST, AST, HF, AF, HC, AC, HF, AF, HY, AY, HR, AR, B365H, B365D, B365A) %>%
-      rename(Domača_ekipa = HomeTeam, Gostujoča_ekipa = AwayTeam, Zadetki_domača_ekipa = FTHG, Zadetki_gostujoca_ekipa = FTAG, Rezultat = FTR, Zadetki_domača_ekipa_polčas = HTHG,
-             Zadetki_gostujoca_ekipa_počas = HTAG, Rezultat_polčas= HTR, Sodnik = Referee, Streli_domači = HS, Streli_gosti = AS, Streli_domači_v_okvir = HST, Streli_gosti_v_okvir = AST,
-             Prekrški_domači = HF, Prekrški_gostje = AF, Koti_domači= HC, Koti_gostje= AF, Rumeni_karton_domači = HY, Rumeni_karton_gostje = AY, Rdeč_karton_domači= HR, Rdeč_karton_gostje = AR,
-             Kvota_zmaga_domačin= B365H, Kvota_neodločeno = B365D, Kvota_zamga_gost = B365A)
+      select_(.dots = kaj_obravnavam) %>%
+      rename_(.dots = nova_imena)
     Sezona$Sezona <- 2000 + i
     Počiščeni_podatki <- rbind(Počiščeni_podatki, Sezona) 
   }
@@ -109,7 +106,7 @@ uvozi.podatke <- function() {
 Sezone <- uvozi.podatke()
   
 # Funkcija, ki uvozi občine iz Wikipedije
-uvozi.tabelo <- function() {
+uvozi.tabelo1 <- function() {
   lin <- "https://en.wikipedia.org/wiki/Premier_League"
   stran <- html_session(lin) %>% read_html()
   tabel <- stran %>% html_nodes(xpath="//table[@class='wikitable']") %>%
@@ -127,8 +124,17 @@ uvozi.tabelo <- function() {
                    function(i) rep(tabel$Klub[i], tabel$Zmage[i])) %>% unlist()
   return(data.frame(Leto, Trener, Klub) %>% arrange(Leto))
 }
-Najbolši_trenerji <- uvozi.tabelo()
+Najbolši_trenerji <- uvozi.tabelo1()
 
+# Funkcija, ki uvozi tabelo trenutnih trenerjev Wikipedije
+uvozi.trenerje <- function() {
+  link <- "https://en.wikipedia.org/wiki/Premier_League"
+  stran <- html_session(link) %>% read_html()
+  tabela <- stran %>% html_nodes(xpath="//table[@class='wikitable sortable']") %>%
+    .[[6]] %>% html_table(dec=",")
+  tabela %>% select(Name, Club, Appointed)
+}
+Trenutni_trenerji <- uvozi.trenerje()
 
 
 
