@@ -1,6 +1,6 @@
 ---
-title: "Poročilo pri predmetu Analiza podatkov s programom R"
-author: "Študent FMF"
+title: "Analiza angleške prve lige"
+author: "Jan Založnik"
 output:
   html_document: default
   pdf_document:
@@ -26,9 +26,9 @@ source("lib/rstudio.r", encoding="UTF-8")
 
 # Izbira teme
 
-Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
+Pri tem projektu bom analizira prvo angleško ligo v zadnjih 10 letih. Pri analizi slednje bom analiziral koliko boljše so ekipe na domači zelenici kot pa v gosteh, število golov na tekmo, število strelov v in izven okvira vrat, število kotov, število rumenih in rdečih kartonov in še več pomembnih statističnih podatkov. Dodal bom pa tudi sodnike, ki so na vsaki tekmi zelo pomemben dejavnik.
 
-![](slike/grb.png)
+![](slike/epl.png)
 
 ***
 
@@ -38,24 +38,44 @@ Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
-Uvozili smo podatke o občinah v obliki CSV s statističnega urada ter v obliki HTML
-z Wikipedije. Podatke imamo v dveh razpredelnicah v obliki *tidy data*.
+Uvozil sem podatke o prvi angleški ligi v obliki CSV s spletne strani https://datahub.io/sports-data/english-premier-league ter v obliki HTML z Wikipedije. Podatke imamo v treh razpredelnicah v obliki *tidy data*.
 
-1. `druzine` - podatki o družinah za vsako občino
-  - `obcina` - spremenljivka: ime občine (neurejen faktor),
-  - `velikost.druzine` - spremenljivka: število otrok v družini (število: 1, 2, 3 ali 4, kjer zadnja vrednost pomeni 4 ali več),
-  - `stevilo.druzin` - meritev: število družin z ustreznim številom otrok v ustrezni občini (število).
+1. `Sezone` - osnovni statistični podatki o angleški prvi ligi (prva tabela)
+  - `Domača_ekipa` - spremenljivka: ime ekipe (neurejen faktor),
+  - `Gostujoča_ekipa` - spremenljivka: ime ekipe (neurejen faktor),
+  - `Zadetki_domača_ekipa` - spremenljivka: število zadetkov domačih (število: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9; kjer nikoli nobena ekipa ni zadela več kot 9 zadetkov),
+  - `Zadetki_gostujoca_ekipa` - spremenljivka: število zadetkov gostov (število: 0, 1, 2, 3, 4, 5, 6, 7; kjer nikoli nobena ekipa ni zadela več kot 7 zadetkov),
+  - `Rezultat` - spremenljivka: Rezultat na koncu tekme (črka : H = zmaga domačih, D = izenačeno, A = zmaga gostov),
+  - `Zadetki_domača_ekipa_polčas` - spremenljivka: število zadetkov domačih (število: 0, 1, 2, 3, 4, 5; kjer nikoli nobena ekipa ni zadela več kot 5 zadetkov)
+  - `Zadetki_gostujoča_ekipa_polčas` - spremenljivka: število zadetkov domačih (število: 0, 1, 2, 3, 4, 5; kjer nikoli nobena ekipa ni zadela več kot 5 zadetkov)
+  - `Rezultat_polčas` - spremenljivka: Rezultat ob polčasu (črka : H = vodstvo domačih, D = izenačeno, A = vodstvo gostov),
+  - `Sodnik` - spremenljivka: ime in priimek sodnika (neurejen faktor)
+  - `Streli_domači` - spremenljivka: število strelov domačih (število),
+  - `Streli_gostje` - spremenljivka: število strelov gostov (število),
+  - `Streli_domači_v_okvir` - spremenljivka: število strelov v okvir domači (število),
+  - `Streli_gostje_v_okvir` - spremenljivka: število strelov gostov (število),
+  - `Prekrški_domači` - spremenljivka: število prekrškov domači (število),
+  - `Prekrški_gostje` - spremenljivka: število prekrškov gostje (število),
+  - `Koti_domači` - spremenljivka: število kotov domači (število),
+  - `Koti_gostje` - spremenljivka: število kotov gostje (število),
+  - `Rumeni_karton_domači` - spremenljivka: število rumenih kartovno domači (število),
+  - `Rumeni_karton_gostje` - spremenljivka: število rumenih kartonov gostje (število),
+  - `Rdeč_karton_domači` - spremenljivka: število rdečih kartonov domači (število),
+  - `Rdeč_karton_gostje` - spremenljivka: število rdečih kartonov gostje (število),
+  - `Kvota_zmaga_domačin` - spremenljivka: kvota za zmago domačih (število),
+  - `Kvota_neodločeno` - spremenljivka: kvota za neodločen izid (število)
+  - `Kvota_zamga_gost` - spremenljivka: kvota za zmago gostov (število).
+  
 
-2. `obcine` - podatki o občinah
-  - `obcina` - spremenljivka: ime občine (neurejen faktor),
-  - `povrsina` - meritev: površina občine v km$^2$ (število),
-  - `prebivalci` - meritev: prebivalstvo občine (število),
-  - `gostota` - meritev: število prebivalcev na km$^2$ (število),
-  - `naselja` - meritev: število naselij v občini (število),
-  - `ustanovitev` - meritev: leto ustanovitve občine (število),
-  - `pokrajina` - meritev: pokrajina, ki ji občina pripada (neurejen faktor),
-  - `regija` - meritev: regija, ki ji občina pripada (neurejen faktor),
-  - `odcepitev` - meritev: podatki o občinah, od katerih se je občina odcepila (besedilo).
+2. `Najboljši_trenerji` - trenerji, ki so osvojili ligo
+  - `Leto` - spremenljivka: leto (število),
+  - `Trener` - spremenljivka: ime in priimek trenerja (neurejen faktor),
+  - `Klub` - spremenljivka: s katerim klubom je trener osvojil ligo (besedilo).
+  
+3. `Trenutni_trenerji` - trenutni trenerji klubov
+  - `Name` - spremenljivka: ime in priiimek trenerja (besedilo),
+  - `Club` - spremenljivka: ime kluba (besedilo),
+  - `Appointed` - spremenljivka: datum, ko so predstavili trenerja (števili in besedilo).
 
 **Opomba**: da bi razpredelnica `obcine` res bila v obliki *tidy data*, bi morali odstraniti stolpec `gostota` (saj je izpeljan iz stolpcev `povrsina` in `prebivalci`), podatke o pokrajinah pa bi morali premakniti v drugo razpredelnico, saj nekatere občine pripadajo dvema pokrajinama. Podobno bi morali narediti tudi s stolpcem `odcepitev`.
 
