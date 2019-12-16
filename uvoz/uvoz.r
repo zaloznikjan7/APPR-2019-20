@@ -83,7 +83,7 @@ library(extrafont)
 # A morem naredit parse_noumber in kak če je tega zelo velik?
 # 
 nova_imena = c("Domača_ekipa" = "HomeTeam", "Gostujoča_ekipa" = "AwayTeam", "Zadetki_domača_ekipa" = "FTHG", "Zadetki_gostujoca_ekipa" = "FTAG", "Rezultat" = "FTR", "Zadetki_domača_ekipa_polčas" = "HTHG",
-               "Zadetki_gostujoca_ekipa_počas" = "HTAG", "Rezultat_polčas" = "HTR", "Sodnik" = "Referee", "Streli_domači" = "HS", "Streli_gosti" = "AS", "Streli_domači_v_okvir" = "HST", "Streli_gosti_v_okvir" = "AST",
+               "Zadetki_gostujoca_ekipa_počas" = "HTAG", "Rezultat_polčas" = "HTR", "Sodnik" = "Referee", "Streli_domači" = "HS", "Streli_gostje" = "AS", "Streli_domači_v_okvir" = "HST", "Streli_gosti_v_okvir" = "AST",
                "Prekrški_domači" = "HF", "Prekrški_gostje" = "AF", "Koti_domači" = "HC", "Koti_gostje" = "AC", "Rumeni_karton_domači" = "HY", "Rumeni_karton_gostje" = "AY", "Rdeč_karton_domači"= "HR", "Rdeč_karton_gostje" = "AR",
                "Kvota_zmaga_domačin" = "B365H", "Kvota_neodločeno" = "B365D", "Kvota_zamga_gost" = "B365A")
 kaj_obravnavam = c("HomeTeam","AwayTeam","FTHG","FTAG","FTR", "HTHG", "HTAG", "HTR", "Referee", "HS", "AS", "HST", "AST", "HF", "AF", "HC", "AC", "HF", "AF", "HY", "AY", "HR", "AR", "B365H", "B365D", "B365A")
