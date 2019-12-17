@@ -94,7 +94,8 @@ ggplot(obcine, aes(x=naselja)) + geom_histogram() +
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
-Spodnji zemljevid prikazuje povprečno velikost družine za vsako občino.
+Cilj moje naloge je ugotoviti, katere ekipe so v zadnjih desetih letih najbolj uspešne in kako to sovpada s statističnimi podatki, želim pokazati, da so ekipe načeloma uspešnejše, ko igrajo na domačem terenu. Zanimajo me tudi bolj splošni podatki, kot je na primer poštenost ekip, ki se kaže z rumenimi in rdečimi kartoni. Pokazal bom tudi, da je število kartonov zelo odvisna od sodnika, torej da nekateri sodniki hitreje posežejo po kartonu kot drugi(to bom pokazal s povprečjem, ki ga ima posamezen sodnik, na primer Mark Klettenburg 3.2 rumenih kartonov in 0.2 rdečih kartonov na tekmo).
+
 
 ```{r zemljevid, echo=FALSE, fig.align='center', fig.cap='Zemljevid povprečnega števila otrok v družini'}
 ggplot() + geom_polygon(data=left_join(zemljevid, povprecja, by=c("OB_UIME"="obcina")),
