@@ -42,12 +42,12 @@ print(graf2 + theme(panel.background=element_rect(fill="white")))
 
 
 novi <- ggplot(data = povprečje_golov, aes(x = Sezona, y = Povprecje1)) + geom_path()
-
+#1 graf
 novi2 <- ggplot(povprečje_golov, aes(Sezona)) + 
   geom_line(aes(y = Povprecje1), color = "red") + 
   geom_line(aes(y = Povprecje2), color = "blue") +
   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
-  legend(x= 0.5,y = 1.5, legend = c("Koliko golov dosežejo domači", "Koliko golov dosežejo gostje"), fill = c(4,2)) +
+ # legend(x= 0.5,y = 1.5, legend = c("Koliko golov dosežejo domači", "Koliko golov dosežejo gostje"), fill = c(4,2)) +
   theme(panel.background=element_rect(fill="white"))
 print(novi2)
 
@@ -59,9 +59,56 @@ print(novi2)
 # Kak bi naredu da bi zbralo eno ekipo in pol pogledlo vrstico in verjetno z if stavkom torej če zadetki_domača_ekipa > zadetki_gostujoca_ekipa pol prištej ena
 # Torej rad bi preštel vse ko so zmagali doma in kolk zgubili, ostalo so tak mogli igrat izenačeno
 # torej na koncu bi rad dau na graf x os je vsak klub in pol nek histogram kolk so meli zmag, novi graf pa kolk so igrali izenačeno pa še en graf kok so zgubili 
-
+#ista logika tut za sodnika da pogledaš pol kolk je dau kerih kartonov
 
 
 # 3. graf
 # Preštejem vse rumene kartone vsake domače ekipe in dam zraven vsoto vseh gostujočih ekip 
+kartoni <- Sezone %>% summarise(kartoni_dodeljeni_domačinom = sum(Rumeni_karton_domači, na.rm = TRUE), kartoni_dodeljeni_gostom =sum(Rumeni_karton_gostje, na.rm = TRUE))
+bar <- ggplot(kartoni) + aes(x=1, fill= kartoni_dodeljeni_gostom) +geom_histogram()
+print(bar)
+
+vsi_kartoni <- sum(kartoni$kartoni_dodeljeni_domačinom + kartoni$kartoni_dodeljeni_gostom)
+test <- sum(Orange$age+Orange$circumference)
+
+stevilo_vseh_rumenih_kartonov <-sum(Sezone$Rumeni_karton_domači, na.rm = TRUE) +sum(Sezone$Rumeni_karton_gostje, na.rm = TRUE)
+stevilo_vseh_rumenih_kartonov_domaci <- sum(Sezone$Rumeni_karton_domači, na.rm = TRUE)
+stevilo_vseh_rumenih_kartonov_gostje <- sum(Sezone$Rumeni_karton_gostje, na.rm = TRUE)
+
+stevilo_tekem <- Sezone %>% select(Rumeni_karton_domači) %>% count()
+stevilo_tekem$n
+stevilo_tekem1 <- nrow(Sezone)
+
+povprecno_rumenih_kartonov_domaci <- round(stevilo_vseh_rumenih_kartonov_domaci/stevilo_tekem1,2)
+povprecno_rumenih_kartonov_gostje <- round(stevilo_vseh_rumenih_kartonov_gostje/stevilo_tekem1,2)
+povprecno_rumenih_kartonov <- round(stevilo_vseh_rumenih_kartonov/stevilo_tekem1,2)
+
+
+
+
+povprečno_vsi_Sodniki <- data_frame(povprecno_rumenih_kartonov,povprecno_rumenih_kartonov_domaci,povprecno_rumenih_kartonov_gostje)
+# kolk kartonov da ker sodnik 
+
+Sodniki_rumeni_kartoni <- Sezone %>% 
+  group_by(Sodnik) %>%
+  summarise(povprecno_domačim_rumen_karton= round(mean_(Rumeni_karton_domači, na.rm=TRUE),2), povprecno_gostom_rumeni_karton = round(mean_(Rumeni_karton_gostje, na.rm= TRUE),2), povprecno_rumeni_karton = round(mean_((Rumeni_karton_gostje+Rumeni_karton_domači), na.rm= TRUE),2)) %>% 
+  arrange(povprecno_rumeni_karton)
+
+# To še morem naredit za rdeč karton zraven
+# enkrat mam l Mason drgač pa L Mason kak to spremenim? 
+# mam nek NA noter sam ga ne najdem, moglo bi bit 3800 dolgo, pa zakaj tu ne dela na.rm?
+# Zemljevidi, na vajah smo delali občine ko so že narisane ka pa naj js naredim ko mam fuzbal?
+
+
+#Tu sm preveru če sm prau zračuno
+# c <- Sezone %>% filter(Sodnik == "L Mason") %>% summarise(stevilo=sum(Rumeni_karton_domači, na.rm = TRUE),kolk_tekm = n())
+# c$stevilo/c$kolk_tekm
+
+
+
+
+
+
+
+
 
