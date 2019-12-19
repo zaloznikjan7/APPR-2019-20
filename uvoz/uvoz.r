@@ -132,10 +132,12 @@ uvozi.trenerje <- function() {
   stran <- html_session(link) %>% read_html()
   tabela <- stran %>% html_nodes(xpath="//table[@class='wikitable sortable']") %>%
     .[[6]] %>% html_table(dec=",")
-  tabela %>% select(Name, Club, Appointed)
+  tabela %>% transmute(Name, Club,
+                       Appointed=parse_date(Appointed, "%d %B %Y",
+                                            locale=locale("en")))
 }
 Trenutni_trenerji <- uvozi.trenerje()
 
-
+# Kak bi zračuno kak dolgo je na trener torej currentdate - date
 
 
