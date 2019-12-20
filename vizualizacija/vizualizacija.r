@@ -33,8 +33,12 @@ library(plotly)
 
 #Ne dela ker ne najde Povprecje2
 
-
-# povprečje_golov <- Sezone %>% group_by(Sezona) %>% summarise(Povprecje1 = mean(Zadetki_domača_ekipa, na.rm = TRUE), Povprecje2 = mean(Zadetki_gostujoca_ekipa,na.rm= TRUE))
+preimenovanje <- c("Zadetki_domača_ekipa"="Domači", "Zadetki_gostujoca_ekipa"="Gosti")
+povprečje_golov <- Sezone %>% select(Sezona, Zadetki_domača_ekipa, Zadetki_gostujoca_ekipa) %>%
+  gather(key="Gostovanje", value="Zadetki", -Sezona) %>%
+  mutate(Gostovanje=preimenovanje[Gostovanje]) %>%
+  group_by(Sezona, Gostovanje) %>%
+  summarise(Povprecje = mean(Zadetki, na.rm = TRUE))
 # graf1 <- povprečje_golov %>%
 #   ggplot(aes(x = Sezona ,y = Povprecje1)) + 
 #   geom_path(color="blue") + 
@@ -45,13 +49,22 @@ library(plotly)
 
 novi <- ggplot(data = povprečje_golov, aes(x = Sezona, y = Povprecje1)) + geom_path()
 #1 graf
-novi2 <- ggplot(povprečje_golov, aes(Sezona)) + 
-  geom_line(aes(y = Povprecje1), color = "red") + 
-  geom_line(aes(y = Povprecje2), color = "blue") +
+novi2 <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje, color=Gostovanje)) + 
+  geom_line() + 
   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
  # legend(x= 0.5,y = 1.5, legend = c("Koliko golov dosežejo domači", "Koliko golov dosežejo gostje"), fill = c(4,2)) +
-  theme(panel.background=element_rect(fill="white"))
+  theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
 print(novi2)
+
+novi2 + geom_smooth(method="lm")
+
+novi3 <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje)) + 
+  geom_line() + 
+  xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
+  # legend(x= 0.5,y = 1.5, legend = c("Koliko golov dosežejo domači", "Koliko golov dosežejo gostje"), fill = c(4,2)) +
+  theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5)) +
+  facet_grid(cols=vars(Gostovanje))
+print(novi3)
 # Kak spremeniš vrstice in stolpce? Kak spremeniš nek podatek naprimer iz A hočem js G
 # Kaj vse je sploh mišljeno pod vizualizacijo? Se pravi grafe in histograme itd? Kak bi biu primer dobrega grafa? tak da se kr na Sezone sklicujem
 # Sj je to mišljeno kot da tak analiziram jl? Pa da sm zaj opazu tut neki kar prej nism vedo in sicer to da narašča število golov v gosteh
@@ -65,6 +78,27 @@ print(novi2)
 # torej na koncu bi rad dau na graf x os je vsak klub in pol nek histogram kolk so meli zmag, novi graf pa kolk so igrali izenačeno pa še en graf kok so zgubili 
 #ista logika tut za sodnika da pogledaš pol kolk je dau kerih kartonov
 
+zmage <- Sezone %>%
+  transmute(Domača_ekipa, Gostujoča_ekipa,
+            Zmaga_domaci=Zadetki_domača_ekipa > Zadetki_gostujoca_ekipa,
+            Remi=Zadetki_domača_ekipa == Zadetki_gostujoca_ekipa,
+            Zmaga_gosti=Zadetki_domača_ekipa < Zadetki_gostujoca_ekipa)
+zmage.skupaj <- rbind(select(zmage, Ekipa=Domača_ekipa, Zmaga=Zmaga_domaci, Remi, Poraz=Zmaga_gosti),
+                      select(zmage, Ekipa=Gostujoča_ekipa, Zmaga=Zmaga_gosti, Remi, Poraz=Zmaga_domaci)) %>%
+  group_by(Ekipa) %>% summarise(Zmage=sum(Zmaga), Remiji=sum(Remi), Porazi=sum(Poraz)) %>%
+  mutate(Tocke = 3*Zmage + Remiji)
+
+ggplot(zmage.skupaj, aes(x=reorder(Ekipa, Tocke), y=Tocke)) + geom_col() + coord_flip()
+
+tocke <- Sezone %>%
+  transmute(Domača_ekipa, Gostujoča_ekipa,
+            Tocke_domaci=ifelse(Zadetki_domača_ekipa > Zadetki_gostujoca_ekipa, 3,
+                                ifelse(Zadetki_domača_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
+            Tocke_gostujoci=ifelse(Zadetki_domača_ekipa < Zadetki_gostujoca_ekipa, 3,
+                                   ifelse(Zadetki_domača_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
+tocke.skupaj <- rbind(select(tocke, Ekipa=Domača_ekipa, Tocke=Tocke_domaci),
+                      select(tocke, Ekipa=Gostujoča_ekipa, Tocke=Tocke_gostujoci)) %>%
+  group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
 
 # 3. graf
 # Preštejem vse rumene kartone vsake domače ekipe in dam zraven vsoto vseh gostujočih ekip 
@@ -130,8 +164,10 @@ tmap_options(max.categories=nrow(obcine))
 # Iz kere strani je včeri potegno zemljevid Slonokoščene obale
 
 ##
-#UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/Rsf/gadm36_GBR_0_sf.rds")
+UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_1",
+                      encoding="UTF-8")
 
+tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE)
 
-
+UK.ggplot <- fortify(UK)
 
