@@ -20,18 +20,6 @@ library(plotly)
 #=========================================================================================================================================================================================
 #1. POVPREČNO ŠTEVILO DOSEŽENIH ZADETKOV DOMAČINOV IN GOSTOV
 
-# povprecno_golov <- ggplot(Sezone %>% filter(Sezona == "2009")) + aes(x=1:380 ,y=Zadetki_domača_ekipa) + geom_point()
-# povprecno_golov
-
-# povprečje_golov_domači <- Sezone %>% group_by(Sezona) %>% summarise(Povprecje = mean(Zadetki_domača_ekipa, na.rm = TRUE))
-# graf1 <-  ggplot(povprečje_golov_domači) %>% + aes(x = Sezona ,y = Povprecje) + geom_path()
-# print(graf1 + theme(panel.background=element_rect(fill="white")))
-# 
-# povprecno_golov_gostje <- Sezone %>% group_by(Sezona) %>% summarise(Povprecje = mean(Zadetki_gostujoca_ekipa, na.rm = TRUE))
-# graf2 <-  ggplot(povprecno_golov_gostje) %>% + aes(x = Sezona ,y = Povprecje) + geom_path()
-# print(graf2 +theme(panel.background=element_rect(fill="white")))
-
-
 preimenovanje <- c("Zadetki_domača_ekipa"="Domači", "Zadetki_gostujoca_ekipa"="Gosti")
 povprečje_golov <- Sezone %>% select(Sezona, Zadetki_domača_ekipa, Zadetki_gostujoca_ekipa) %>%
   gather(key="Gostovanje", value="Zadetki", -Sezona) %>%
@@ -47,28 +35,19 @@ Primerjava_zadetkov_domace_gostujoce_ekipe_graf <- ggplot(povprečje_golov, aes(
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
 print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
 
-Napoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
+aNapoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
 print(Napoved_golov)
+# Kak naredit da maš dva različna grafa
 
-novi3 <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje)) + 
-  geom_line() + 
-  xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
-  theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5)) +
-  facet_grid(cols=vars(Gostovanje)) # tu lahk daš al cols= al pa rows =
-print(novi3)
-# Kak spremeniš vrstice in stolpce? Kak spremeniš nek podatek naprimer iz A hočem js G
-# Kaj vse je sploh mišljeno pod vizualizacijo? Se pravi grafe in histograme itd? Kak bi biu primer dobrega grafa? tak da se kr na Sezone sklicujem
-# Sj je to mišljeno kot da tak analiziram jl? Pa da sm zaj opazu tut neki kar prej nism vedo in sicer to da narašča število golov v gosteh
-# Kak se ggtitle prestavi na sredino? Kak se naredi legenda?
-# Kak lahk dva grafa skup narišem? se pravi graf1 in graf2 skup na isti sliki? Kak se to naredi s dplyr, al pa da še več kot dva grafa skup daš
+# novi3 <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje)) + 
+#   geom_line() + 
+#   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
+#   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5)) +
+#   facet_grid(cols=vars(Gostovanje)) # tu lahk daš al cols= al pa rows =
+# print(novi3)
 
 
-
-# Kak bi naredu da bi zbralo eno ekipo in pol pogledlo vrstico in verjetno z if stavkom torej če zadetki_domača_ekipa > zadetki_gostujoca_ekipa pol prištej ena
-# Torej rad bi preštel vse ko so zmagali doma in kolk zgubili, ostalo so tak mogli igrat izenačeno
-# torej na koncu bi rad dau na graf x os je vsak klub in pol nek histogram kolk so meli zmag, novi graf pa kolk so igrali izenačeno pa še en graf kok so zgubili 
-#ista logika tut za sodnika da pogledaš pol kolk je dau kerih kartonov
-
+# Drugi graf
 zmage <- Sezone %>%
   transmute(Domača_ekipa, Gostujoča_ekipa,
             Zmaga_domaci=Zadetki_domača_ekipa > Zadetki_gostujoca_ekipa,
@@ -140,7 +119,7 @@ apply(Sodniki_rumeni_kartoni,2, length)
 #Zemljevidi 
 # Na vajah smo meli občine in je samo po sebi se izšlo ka pa naj js naredim ko mam angleško ligo? kak zemljevid je fajn uvozit? 
 
-install.packages("maptools")
+
 library(tmap)
 source("https://raw.githubusercontent.com/jaanos/APPR-2019-20/master/lib/uvozi.zemljevid.r")
 
@@ -161,4 +140,9 @@ UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_sh
 tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE)
 
 UK.ggplot <- fortify(UK)
+
+
+
+
+
 
