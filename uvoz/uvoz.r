@@ -36,7 +36,10 @@ uvozi.podatke <- function() {
     Sezona$Sezona <- 2000 + i
     Počiščeni_podatki <- rbind(Počiščeni_podatki, Sezona) 
   }
-  Počiščeni_podatki %>% drop_na(1)
+  Počiščeni_podatki <- Počiščeni_podatki %>% drop_na(1)
+  popravek <- Počiščeni_podatki["Sodnik"]
+  popravek[(Sezone["Sodnik"] == "L Mason"),1] = "L Mason"
+  mutate(Počiščeni_podatki, Sodnik = popravek)
 }
 
 Sezone <- uvozi.podatke()

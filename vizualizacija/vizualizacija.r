@@ -31,7 +31,6 @@ library(plotly)
 # graf2 <-  ggplot(povprecno_golov_gostje) %>% + aes(x = Sezona ,y = Povprecje) + geom_path()
 # print(graf2 +theme(panel.background=element_rect(fill="white")))
 
-#Ne dela ker ne najde Povprecje2
 
 preimenovanje <- c("Zadetki_domača_ekipa"="Domači", "Zadetki_gostujoca_ekipa"="Gosti")
 povprečje_golov <- Sezone %>% select(Sezona, Zadetki_domača_ekipa, Zadetki_gostujoca_ekipa) %>%
@@ -39,31 +38,23 @@ povprečje_golov <- Sezone %>% select(Sezona, Zadetki_domača_ekipa, Zadetki_gos
   mutate(Gostovanje=preimenovanje[Gostovanje]) %>%
   group_by(Sezona, Gostovanje) %>%
   summarise(Povprecje = mean(Zadetki, na.rm = TRUE))
-# graf1 <- povprečje_golov %>%
-#   ggplot(aes(x = Sezona ,y = Povprecje1)) + 
-#   geom_path(color="blue") + 
-#   geom_path(x = Povprecje2)
-# graf2 <- ggplot(povprečje_golov) %>% + aes(x = Sezona , y= Povprecje2) + geom_path(color= "red")
-# print(graf2 + theme(panel.background=element_rect(fill="white")))
 
 
-novi <- ggplot(data = povprečje_golov, aes(x = Sezona, y = Povprecje1)) + geom_path()
 #1 graf
-novi2 <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje, color=Gostovanje)) + 
+Primerjava_zadetkov_domace_gostujoce_ekipe_graf <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje, color=Gostovanje)) + 
   geom_line() + 
   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
- # legend(x= 0.5,y = 1.5, legend = c("Koliko golov dosežejo domači", "Koliko golov dosežejo gostje"), fill = c(4,2)) +
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
-print(novi2)
+print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
 
-novi2 + geom_smooth(method="lm")
+Napoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
+print(Napoved_golov)
 
 novi3 <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje)) + 
   geom_line() + 
   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
-  # legend(x= 0.5,y = 1.5, legend = c("Koliko golov dosežejo domači", "Koliko golov dosežejo gostje"), fill = c(4,2)) +
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5)) +
-  facet_grid(cols=vars(Gostovanje))
+  facet_grid(cols=vars(Gostovanje)) # tu lahk daš al cols= al pa rows =
 print(novi3)
 # Kak spremeniš vrstice in stolpce? Kak spremeniš nek podatek naprimer iz A hočem js G
 # Kaj vse je sploh mišljeno pod vizualizacijo? Se pravi grafe in histograme itd? Kak bi biu primer dobrega grafa? tak da se kr na Sezone sklicujem
