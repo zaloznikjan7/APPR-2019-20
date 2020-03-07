@@ -18,32 +18,32 @@ library(maptools)
 library(extrafont)
 library(plyr)
 
-nova_imena = c("Domača_ekipa" = "HomeTeam", "Gostujoča_ekipa" = "AwayTeam", "Zadetki_domača_ekipa" = "FTHG", "Zadetki_gostujoca_ekipa" = "FTAG", "Rezultat" = "FTR", "Zadetki_domača_ekipa_polčas" = "HTHG",
-               "Zadetki_gostujoca_ekipa_počas" = "HTAG", "Rezultat_polčas" = "HTR", "Sodnik" = "Referee", "Streli_domači" = "HS", "Streli_gostje" = "AS", "Streli_domači_v_okvir" = "HST", "Streli_gosti_v_okvir" = "AST",
-               "Prekrški_domači" = "HF", "Prekrški_gostje" = "AF", "Koti_domači" = "HC", "Koti_gostje" = "AC", "Rumeni_karton_domači" = "HY", "Rumeni_karton_gostje" = "AY", "Rdeč_karton_domači"= "HR", "Rdeč_karton_gostje" = "AR",
-               "Kvota_zmaga_domačin" = "B365H", "Kvota_neodločeno" = "B365D", "Kvota_zamga_gost" = "B365A")
+nova_imena = c("Domaca_ekipa" = "HomeTeam", "Gostujoca_ekipa" = "AwayTeam", "Zadetki_domaca_ekipa" = "FTHG", "Zadetki_gostujoca_ekipa" = "FTAG", "Rezultat" = "FTR", "Zadetki_domaca_ekipa_polcas" = "HTHG",
+               "Zadetki_gostujoca_ekipa_pocas" = "HTAG", "Rezultat_polcas" = "HTR", "Sodnik" = "Referee", "Streli_domaci" = "HS", "Streli_gostje" = "AS", "Streli_domaci_v_okvir" = "HST", "Streli_gosti_v_okvir" = "AST",
+               "PrekrSki_domaci" = "HF", "PrekrSki_gostje" = "AF", "Koti_domaci" = "HC", "Koti_gostje" = "AC", "Rumeni_karton_domaci" = "HY", "Rumeni_karton_gostje" = "AY", "Rdec_karton_domaci"= "HR", "Rdec_karton_gostje" = "AR",
+               "Kvota_zmaga_domacin" = "B365H", "Kvota_neodloceno" = "B365D", "Kvota_zamga_gost" = "B365A")
 kaj_obravnavam = c("HomeTeam","AwayTeam","FTHG","FTAG","FTR", "HTHG", "HTAG", "HTR", "Referee", "HS", "AS", "HST", "AST", "HF", "AF", "HC", "AC", "HF", "AF", "HY", "AY", "HR", "AR", "B365H", "B365D", "B365A")
 
 popravljeno_ime = c("l Mason"= "L Mason")
-# Funkcija, ki uvozi podatke in jih počisti:
+# Funkcija, ki uvozi podatke in jih pocisti:
 uvozi.podatke <- function() {
-  Počiščeni_podatki <- NULL
+  PociSceni_podatki <- NULL
   for (i in 9:18) {
     datoteka <- sprintf("podatki/season-%02d%02d.csv", i, i+1)
     Sezona <- read_csv(datoteka, locale=locale(encoding="utf8")) %>%
       select_(.dots = kaj_obravnavam) %>%
       rename_(.dots = nova_imena)
     Sezona$Sezona <- 2000 + i
-    Počiščeni_podatki <- rbind(Počiščeni_podatki, Sezona) 
+    PociSceni_podatki <- rbind(PociSceni_podatki, Sezona) 
   }
-  Počiščeni_podatki <- Počiščeni_podatki %>% drop_na(1)
-  Počiščeni_podatki$Sodnik[Počiščeni_podatki$Sodnik == "l Mason"] <- "L Mason"
-  return(Počiščeni_podatki)
+  PociSceni_podatki <- PociSceni_podatki %>% drop_na(1)
+  PociSceni_podatki$Sodnik[PociSceni_podatki$Sodnik == "l Mason"] <- "L Mason"
+  return(PociSceni_podatki)
 }
 
 Sezone <- uvozi.podatke()
   
-# Funkcija, ki uvozi občine iz Wikipedije
+# Funkcija, ki uvozi obcine iz Wikipedije
 uvozi.tabelo1 <- function() {
   lin <- "https://en.wikipedia.org/wiki/Premier_League"
   stran <- html_session(lin) %>% read_html()
@@ -62,7 +62,7 @@ uvozi.tabelo1 <- function() {
                    function(i) rep(tabel$Klub[i], tabel$Zmage[i])) %>% unlist()
   return(data.frame(Leto, Trener, Klub) %>% arrange(Leto))
 }
-Najbolši_trenerji <- uvozi.tabelo1()
+NajbolSi_trenerji <- uvozi.tabelo1()
 
 # Funkcija, ki uvozi tabelo trenutnih trenerjev Wikipedije
 uvozi.trenerje <- function() {
