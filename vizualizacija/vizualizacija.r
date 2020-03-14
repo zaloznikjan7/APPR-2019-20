@@ -13,22 +13,22 @@ library(plotly)
 # zemljevid$OB_UIME <- factor(zemljevid$OB_UIME, levels=levels(obcine$obcina))
 # zemljevid <- fortify(zemljevid)
 # 
-# # Izračunamo povprečno velikost družine
+# # Izracunamo povprecno velikost druzine
 # povprecja <- druzine %>% group_by(obcina) %>%
 #   summarise(povprecje=sum(velikost.druzine * stevilo.druzin) / sum(stevilo.druzin))
 
 #=========================================================================================================================================================================================
-#1. POVPREČNO ŠTEVILO DOSEŽENIH ZADETKOV DOMAČINOV IN GOSTOV
+#1. POVPREcNO sTEVILO DOSEzENIH ZADETKOV DOMAcINOV IN GOSTOV
 
 #1. graf
-preimenovanje <- c("Zadetki_domača_ekipa"="Domači", "Zadetki_gostujoca_ekipa"="Gosti")
-povprečje_golov <- Sezone %>% select(Sezona, Zadetki_domača_ekipa, Zadetki_gostujoca_ekipa) %>%
+preimenovanje <- c("Zadetki_domaca_ekipa"="Domači", "Zadetki_gostujoca_ekipa"="Gosti")
+povprecje_golov <- Sezone %>% select(Sezona, Zadetki_domaca_ekipa, Zadetki_gostujoca_ekipa) %>%
   gather(key=Gostovanje, value="Zadetki", -Sezona) %>%
   mutate(Gostovanje=preimenovanje[Gostovanje]) %>%
   group_by(Sezona, Gostovanje) %>%
   summarise(Povprecje = mean(Zadetki, na.rm = TRUE))
 
-Primerjava_zadetkov_domace_gostujoce_ekipe_graf <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje, color=Gostovanje)) + 
+Primerjava_zadetkov_domace_gostujoce_ekipe_graf <- ggplot(povprecje_golov, aes(x=Sezona, y=Povprecje, color=Gostovanje)) + 
   geom_line() + 
   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
@@ -36,105 +36,119 @@ print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
 
 Napoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
 print(Napoved_golov)
-# Kak naredit da maš dva različna grafa
 
-# novi3 <- ggplot(povprečje_golov, aes(x=Sezona, y=Povprecje)) + 
+# novi3 <- ggplot(povprecje_golov, aes(x=Sezona, y=Povprecje)) + 
 #   geom_line() + 
-#   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
+#   xlab("Sezona") + ylab("Povprecje zadetkov") + ggtitle("Primerjava zadetkov domace in gostujoce ekipe") +
 #   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5)) +
-#   facet_grid(cols=vars(Gostovanje)) # tu lahk daš al cols= al pa rows =
+#   facet_grid(cols=vars(Gostovanje)) # tu lahk das al cols= al pa rows =
 # print(novi3)
 
 #=========================================================================================================================================================================================
-# Drugi graf (Osvojene točke v zadnjih 10 sezonah)
+# Drugi graf (Osvojene tocke v zadnjih 10 sezonah)
 zmage <- Sezone %>%
-  transmute(Domača_ekipa, Gostujoča_ekipa,
-            Zmaga_domaci=Zadetki_domača_ekipa > Zadetki_gostujoca_ekipa,
-            Remi=Zadetki_domača_ekipa == Zadetki_gostujoca_ekipa,
-            Zmaga_gosti=Zadetki_domača_ekipa < Zadetki_gostujoca_ekipa)
-zmage.skupaj <- rbind(select(zmage, Ekipa=Domača_ekipa, Zmaga=Zmaga_domaci, Remi, Poraz=Zmaga_gosti),
-                      select(zmage, Ekipa=Gostujoča_ekipa, Zmaga=Zmaga_gosti, Remi, Poraz=Zmaga_domaci)) %>%
+  transmute(Domaca_ekipa, Gostujoca_ekipa,
+            Zmaga_domaci<-Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa,
+            Remi<-Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa,
+            Zmaga_gosti<-Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa)
+zmage.skupaj <- rbind(select(zmage, Ekipa=Domaca_ekipa, Zmaga=Zmaga_domaci, Remi, Poraz=Zmaga_gosti),
+                      select(zmage, Ekipa=Gostujoca_ekipa, Zmaga=Zmaga_gosti, Remi, Poraz=Zmaga_domaci)) %>%
                       group_by(Ekipa) %>% summarise(Zmage=sum(Zmaga), Remiji=sum(Remi), Porazi=sum(Poraz)) %>%
                       mutate(Tocke = 3*Zmage + Remiji)
 
-ggplot(zmage.skupaj, aes(x=reorder(Ekipa, Tocke), y=Tocke)) + geom_col() + coord_flip() + xlab("Ekipa") + ylab("Točke")
+print(ggplot(zmage.skupaj, aes(x=reorder(Ekipa, Tocke), y=Tocke)) + geom_col() + coord_flip() + xlab("Ekipa") + ylab("Tocke"))
 
 tocke <- Sezone %>%
-  transmute(Domača_ekipa, Gostujoča_ekipa,
-            Tocke_domaci=ifelse(Zadetki_domača_ekipa > Zadetki_gostujoca_ekipa, 3,
-                                ifelse(Zadetki_domača_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
-            Tocke_gostujoci=ifelse(Zadetki_domača_ekipa < Zadetki_gostujoca_ekipa, 3,
-                                   ifelse(Zadetki_domača_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
-tocke.skupaj <- rbind(select(tocke, Ekipa=Domača_ekipa, Tocke=Tocke_domaci),
-                      select(tocke, Ekipa=Gostujoča_ekipa, Tocke=Tocke_gostujoci)) %>%
+  transmute(Domaca_ekipa, Gostujoca_ekipa,
+            Tocke_domaci=ifelse(Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa, 3,
+                                ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
+            Tocke_gostujoci=ifelse(Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa, 3,
+                                   ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
+tocke.skupaj <- rbind(select(tocke, Ekipa=Domaca_ekipa, Tocke=Tocke_domaci),
+                      select(tocke, Ekipa=Gostujoca_ekipa, Tocke=Tocke_gostujoci)) %>%
   group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
 #=========================================================================================================================================================================================
 # 3. graf
-# diagram, ki kaže da dobijo gostje veliko več rumenih kartonov kot domači // to bi še lahk naredu po sezonah in eno skupno bi blo bolj zanimivo  
-########kartoni <- Sezone %>% summarise("Domači" = sum(Rumeni_karton_domači, na.rm = TRUE), "Gostje" =sum(Rumeni_karton_gostje, na.rm = TRUE))
+# diagram, ki kaze da dobijo gostje veliko vec rumenih kartonov kot domaci // to bi se lahk naredu po sezonah in eno skupno bi blo bolj zanimivo  
+kartoni <- Sezone %>% summarise("Domaci" = sum(Rumeni_karton_domaci, na.rm = TRUE), "Gostje" = sum(Rumeni_karton_gostje, na.rm = TRUE))
 #pripravljeni podatki
-stevilo_vseh_rumenih_kartonov_domaci <- sum(Sezone$Rumeni_karton_domači, na.rm = TRUE)
+stevilo_vseh_rumenih_kartonov_domaci <- sum(Sezone$Rumeni_karton_domaci, na.rm = TRUE)
 stevilo_vseh_rumenih_kartonov_gostje <- sum(Sezone$Rumeni_karton_gostje, na.rm = TRUE)
-vsi_kartoni <- sum(kartoni$Domači + kartoni$Gostje)
+vsi_kartoni <- sum(kartoni$Domaci + kartoni$Gostje)
 procent <- c(stevilo_vseh_rumenih_kartonov_domaci/vsi_kartoni, stevilo_vseh_rumenih_kartonov_gostje/ vsi_kartoni)
-kartoni2 <- kartoni %>% gather(key= "Ekipa", value = "Število_kartonov")
+kartoni2 <- kartoni %>% gather(key= "Ekipa", value = "stevilo_kartonov")
 ##### 3 graf #####
-stolpični_graf_prejetih_rumenih_kartonov <- ggplot(kartoni2,  aes(x= Ekipa, y = Število_kartonov, fill=Ekipa )) +
-                              geom_col() + geom_text(aes(label = scales::percent(procent), y = procent, group = Število_kartonov),
+stolpicni_graf_prejetih_rumenih_kartonov <- ggplot(kartoni2,  aes(x= Ekipa, y = stevilo_kartonov, fill=Ekipa )) +
+                              geom_col() + geom_text(aes(label = scales::percent(procent), y = procent, group = stevilo_kartonov),
                               position = position_dodge(width = 1.5), vjust = -0.5) +
-                              ylab("Število kartonov") + ggtitle("Primerjava prejetih rumenih kartonov domače in gostujoče ekipe") +
+                              ylab("stevilo kartonov") + ggtitle("Primerjava prejetih rumenih kartonov domace in gostujoce ekipe") +
                               theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
-print(stolpični_graf_prejetih_rumenih_kartonov)
+print(stolpicni_graf_prejetih_rumenih_kartonov)
+
+
+### kuj nika
+
+porazdelitvena_funkcija_rumenih_kartonov_domaci <- Sezone %>% select(Rumeni_karton_domaci) %>% count()
+
+
+#### kuj nika
 
 
 
-
-porazdelitvena_funkcija_rumenih_kartonov_domaci <- Sezone %>% select(Rumeni_karton_domači) %>% count()
+# kolk kartonov dajo vsi sodniki povprecno skup
 stevilo_tekem <- nrow(Sezone)
-
-
-
-
-
-# kolk kartonov dajo vsi sodniki povprečno skup
-povprecno_rumenih_kartonov_domaci <- round(stevilo_vseh_rumenih_kartonov_domaci/stevilo_tekem1,2)
-povprecno_rumenih_kartonov_gostje <- round(stevilo_vseh_rumenih_kartonov_gostje/stevilo_tekem1,2)
+stevilo_vseh_rumenih_kartonov <- stevilo_vseh_rumenih_kartonov_domaci + stevilo_vseh_rumenih_kartonov_gostje
+povprecno_rumenih_kartonov_domaci <- round(stevilo_vseh_rumenih_kartonov_domaci/stevilo_tekem,2)
+povprecno_rumenih_kartonov_gostje <- round(stevilo_vseh_rumenih_kartonov_gostje/stevilo_tekem,2)
 povprecno_rumenih_kartonov <- round(stevilo_vseh_rumenih_kartonov/stevilo_tekem1,2)
 
-povprečno_vsi_Sodniki <- tibble(povprecno_rumenih_kartonov,povprecno_rumenih_kartonov_domaci,povprecno_rumenih_kartonov_gostje)
+povprecno_vsi_Sodniki <- tibble(povprecno_rumenih_kartonov,povprecno_rumenih_kartonov_domaci,povprecno_rumenih_kartonov_gostje)
 
 # kolk kartonov da ker sodnik
-Sodniki_rumeni_kartoni <- Sezone %>% 
+Sodniki_rumeni_kartoni <- Sezone %>%
   group_by(Sodnik) %>%
-  summarise(povprecno_domačim_rumen_karton= round(mean_(Rumeni_karton_domači, na.rm=TRUE),2), povprecno_gostom_rumeni_karton = round(mean_(Rumeni_karton_gostje, na.rm= TRUE),2), povprecno_rumeni_karton = round(mean_((Rumeni_karton_gostje+Rumeni_karton_domači), na.rm= TRUE),2)) %>% 
+  summarise(povprecno_domacim_rumen_karton= round(mean_(Rumeni_karton_domaci, na.rm=TRUE),2), povprecno_gostom_rumeni_karton = round(mean_(Rumeni_karton_gostje, na.rm= TRUE),2), povprecno_rumeni_karton = round(mean_((Rumeni_karton_gostje+Rumeni_karton_domaci), na.rm= TRUE),2)) %>% 
   arrange(povprecno_rumeni_karton)
 
-# 4. graf, koliko rumenih kartonov dodeli sodnik na posamezni tekmi
+#### 4. graf, koliko rumenih kartonov dodeli sodnik na posamezni tekmi ####
 ggplot(Sodniki_rumeni_kartoni,aes(x= Sodniki_rumeni_kartoni$Sodnik,y= Sodniki_rumeni_kartoni$povprecno_rumeni_karton))+ geom_col() + coord_flip()+
   geom_hline(aes(yintercept= povprecno_rumenih_kartonov, color = "red"))+ xlab("Sodnik") +
-  ylab("Število rumenih kartonov") + ggtitle("Število dodeljenih rumenih kartonov v povprečju") + labs(color="Legenda")  
+  ylab("stevilo rumenih kartonov") + ggtitle("stevilo dodeljenih rumenih kartonov v povprecju") + labs(color="Legenda")  
   
 
+# To se morem naredit za rdec karton zraven
+####5 . graf (Povprecno rdeci kartoni) ####
 
-# kak bi zaj lahk js to nariso oziroma predstavu? fajn bi blo da bi meu tut neko rdečo premico ki kaže povprečno_vsi_sodniki
-# To še morem naredit za rdeč karton zraven
+stevilo_vseh_rdecih_kartonov_domaci <- sum(Sezone$Rdec_karton_domaci, na.rm = TRUE)
+stevilo_vseh_rdecih_kartonov_gostje <- sum(Sezone$Rdec_karton_gostje, na.rm = TRUE)
+rdeci_kartoni <- Sezone %>% summarise("Domaci" = sum(Rdec_karton_domaci, na.rm = TRUE), "Gostje" = sum(Rdec_karton_gostje, na.rm = TRUE))
+vsi_kartoni2 <- sum(rdeci_kartoni$Domaci + rdeci_kartoni$Gostje)
+rdec_procent <- c(stevilo_vseh_rdecih_kartonov_domaci/vsi_kartoni2, stevilo_vseh_rdecih_kartonov_gostje/ vsi_kartoni2)
+rdec_kartoni2 <- rdeci_kartoni %>% gather(key= "Ekipa", value = "stevilo_kartonov")
+##### 5 graf ##### RDEcI KARTONI
+stolpicni_graf_prejetih_rdecih_kartonov <- ggplot(rdec_kartoni2,  aes(x= Ekipa, y = stevilo_kartonov, fill=Ekipa )) +
+  geom_col() + geom_text(aes(label = scales::percent(rdec_procent), group = stevilo_kartonov),
+                         position = position_dodge(width = 1), vjust = -1) +
+  ylab("stevilo kartonov") + ggtitle("Primerjava prejetih rdecih kartonov domace in gostujoce ekipe") +
+  theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
+print(stolpicni_graf_prejetih_rdecih_kartonov)
 
-apply(Sodniki_rumeni_kartoni,2, length)
 
-#Tu sm preveru če sm prau zračuno
-# c <- Sezone %>% filter(Sodnik == "L Mason") %>% summarise(stevilo=sum(Rumeni_karton_domači, na.rm = TRUE),kolk_tekm = n())
-# c$stevilo/c$kolk_tekm
-
-
-
-
-
+proba <- Sezone %>% select(Domaca_ekipa,PrekrSki_domaci, Gostujoca_ekipa, PrekrSki_gostje)
 
 
 #prekrški 
-# Prekrski <- Sezone %>% group_by(Prekrški_domači, Prekrški_gostje) %>% 
-#   summarise(Prekskii= Prekrški_domači+Prekrški_gostje)
+Prekrski_domacini <- Sezone %>% select(Domaca_ekipa, PrekrSki_domaci) %>%
+  gather(-Domaca_ekipa, key = ekipa, value = stevilo_prekrskov) %>% group_by(Domaca_ekipa) %>% 
+  summarise(skupek = sum(stevilo_prekrskov))# %>% rename("Ekipa"= Domaca_ekipa)
+Prekrski_gostjee <- Sezone %>% select(Gostujoca_ekipa, PrekrSki_gostje) %>%
+  gather(-Gostujoca_ekipa, key = ekipa, value = stevilo_prekrskov) %>% group_by(Gostujoca_ekipa) %>% 
+  summarise(skupek = sum(stevilo_prekrskov))# %>% rename("Ekipa"= Gostujoca_ekipa)
 
+Prekrski_skupaj <- rbind(select(Prekrski_domacini, Ekipa=Domaca_ekipa, prek= skupek),
+                        select(Prekrski_gostjee, Ekipa=Gostujoca_ekipa, prek= skupek)) %>%
+  group_by(Ekipa) %>% summarise("Prekrški"=sum(prek))
+print(ggplot(Prekrski_skupaj, aes(x=reorder(Ekipa, Prekrški), y=Prekrški)) + geom_point() + xlab("Ekipa")+ coord_flip() + ylab("Število prekrškov"))
 
 
 
@@ -142,7 +156,7 @@ apply(Sodniki_rumeni_kartoni,2, length)
 #=========================================================================================================================================================================================
 
 #Zemljevidi 
-# Na vajah smo meli občine in je samo po sebi se izšlo ka pa naj js naredim ko mam angleško ligo? kak zemljevid je fajn uvozit? 
+# Na vajah smo meli obcine in je samo po sebi se izslo ka pa naj js naredim ko mam anglesko ligo? kak zemljevid je fajn uvozit? 
 
 
 #library(tmap)
@@ -156,7 +170,7 @@ apply(Sodniki_rumeni_kartoni,2, length)
 #tm_shape(obcine) + tm_polygons("OB_UIME") + tm_legend(show=FALSE)
 
 #tmap_options(max.categories=nrow(obcine))
-# Iz kere strani je včeri potegno zemljevid Slonokoščene obale
+# Iz kere strani je vceri potegno zemljevid Slonokoscene obale
 
 ##
 #UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_1",
