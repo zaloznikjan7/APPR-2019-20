@@ -1,22 +1,3 @@
-library(ggplot2)
-library(dplyr)
-library(plotrix)
-library(plotly)
-
-# # 3. faza: Vizualizacija podatkov
-# 
-# # Uvozimo zemljevid.
-# zemljevid <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
-#                              pot.zemljevida="OB", encoding="Windows-1250")
-# levels(zemljevid$OB_UIME) <- levels(zemljevid$OB_UIME) %>%
-#   { gsub("Slovenskih", "Slov.", .) } %>% { gsub("-", " - ", .) }
-# zemljevid$OB_UIME <- factor(zemljevid$OB_UIME, levels=levels(obcine$obcina))
-# zemljevid <- fortify(zemljevid)
-# 
-# # Izracunamo povprecno velikost druzine
-# povprecja <- druzine %>% group_by(obcina) %>%
-#   summarise(povprecje=sum(velikost.druzine * stevilo.druzin) / sum(stevilo.druzin))
-
 #=========================================================================================================================================================================================
 #1. POVPREcNO sTEVILO DOSEzENIH ZADETKOV DOMAcINOV IN GOSTOV
 
@@ -36,13 +17,6 @@ print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
 
 Napoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
 print(Napoved_golov)
-
-# novi3 <- ggplot(povprecje_golov, aes(x=Sezona, y=Povprecje)) + 
-#   geom_line() + 
-#   xlab("Sezona") + ylab("Povprecje zadetkov") + ggtitle("Primerjava zadetkov domace in gostujoce ekipe") +
-#   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5)) +
-#   facet_grid(cols=vars(Gostovanje)) # tu lahk das al cols= al pa rows =
-# print(novi3)
 
 #=========================================================================================================================================================================================
 # Drugi graf (Osvojene tocke v zadnjih 10 sezonah)
@@ -86,13 +60,6 @@ stolpicni_graf_prejetih_rumenih_kartonov <- ggplot(kartoni2,  aes(x= Ekipa, y = 
 print(stolpicni_graf_prejetih_rumenih_kartonov)
 
 
-### kuj nika
-
-porazdelitvena_funkcija_rumenih_kartonov_domaci <- Sezone %>% select(Rumeni_karton_domaci) %>% count()
-
-
-#### kuj nika
-
 
 
 # kolk kartonov dajo vsi sodniki povprecno skup
@@ -100,7 +67,7 @@ stevilo_tekem <- nrow(Sezone)
 stevilo_vseh_rumenih_kartonov <- stevilo_vseh_rumenih_kartonov_domaci + stevilo_vseh_rumenih_kartonov_gostje
 povprecno_rumenih_kartonov_domaci <- round(stevilo_vseh_rumenih_kartonov_domaci/stevilo_tekem,2)
 povprecno_rumenih_kartonov_gostje <- round(stevilo_vseh_rumenih_kartonov_gostje/stevilo_tekem,2)
-povprecno_rumenih_kartonov <- round(stevilo_vseh_rumenih_kartonov/stevilo_tekem1,2)
+povprecno_rumenih_kartonov <- round(stevilo_vseh_rumenih_kartonov/stevilo_tekem,2)
 
 povprecno_vsi_Sodniki <- tibble(povprecno_rumenih_kartonov,povprecno_rumenih_kartonov_domaci,povprecno_rumenih_kartonov_gostje)
 
@@ -113,10 +80,9 @@ Sodniki_rumeni_kartoni <- Sezone %>%
 #### 4. graf, koliko rumenih kartonov dodeli sodnik na posamezni tekmi ####
 ggplot(Sodniki_rumeni_kartoni,aes(x= Sodniki_rumeni_kartoni$Sodnik,y= Sodniki_rumeni_kartoni$povprecno_rumeni_karton))+ geom_col() + coord_flip()+
   geom_hline(aes(yintercept= povprecno_rumenih_kartonov, color = "red"))+ xlab("Sodnik") +
-  ylab("stevilo rumenih kartonov") + ggtitle("stevilo dodeljenih rumenih kartonov v povprecju") + labs(color="Legenda")  
+  ylab("stevilo rumenih kartonov") + ggtitle("Število dodeljenih rumenih kartonov v povprečju") + labs(color="Legenda")  
   
 
-# To se morem naredit za rdec karton zraven
 ####5 . graf (Povprecno rdeci kartoni) ####
 
 stevilo_vseh_rdecih_kartonov_domaci <- sum(Sezone$Rdec_karton_domaci, na.rm = TRUE)
@@ -125,16 +91,16 @@ rdeci_kartoni <- Sezone %>% summarise("Domaci" = sum(Rdec_karton_domaci, na.rm =
 vsi_kartoni2 <- sum(rdeci_kartoni$Domaci + rdeci_kartoni$Gostje)
 rdec_procent <- c(stevilo_vseh_rdecih_kartonov_domaci/vsi_kartoni2, stevilo_vseh_rdecih_kartonov_gostje/ vsi_kartoni2)
 rdec_kartoni2 <- rdeci_kartoni %>% gather(key= "Ekipa", value = "stevilo_kartonov")
-##### 5 graf ##### RDEcI KARTONI
+
+##### 5 graf ##### RDECI KARTONI
 stolpicni_graf_prejetih_rdecih_kartonov <- ggplot(rdec_kartoni2,  aes(x= Ekipa, y = stevilo_kartonov, fill=Ekipa )) +
   geom_col() + geom_text(aes(label = scales::percent(rdec_procent), group = stevilo_kartonov),
                          position = position_dodge(width = 1), vjust = -1) +
-  ylab("stevilo kartonov") + ggtitle("Primerjava prejetih rdecih kartonov domace in gostujoce ekipe") +
+  ylab("Število kartonov") + ggtitle("Primerjava prejetih rdečih kartonov domače in gostujoče ekipe") +
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
 print(stolpicni_graf_prejetih_rdecih_kartonov)
 
 
-proba <- Sezone %>% select(Domaca_ekipa,PrekrSki_domaci, Gostujoca_ekipa, PrekrSki_gostje)
 
 
 #prekrški 
@@ -147,11 +113,25 @@ Prekrski_gostjee <- Sezone %>% select(Gostujoca_ekipa, PrekrSki_gostje) %>%
 
 Prekrski_skupaj <- rbind(select(Prekrski_domacini, Ekipa=Domaca_ekipa, prek= skupek),
                         select(Prekrski_gostjee, Ekipa=Gostujoca_ekipa, prek= skupek)) %>%
-  group_by(Ekipa) %>% summarise("Prekrški"=sum(prek))
+                        group_by(Ekipa) %>% summarise("Prekrški"=sum(prek))
 print(ggplot(Prekrski_skupaj, aes(x=reorder(Ekipa, Prekrški), y=Prekrški)) + geom_point() + xlab("Ekipa")+ coord_flip() + ylab("Število prekrškov"))
 
 
 
+# Graf kolk dni je kdo trener
+
+Trenutni_trenerji$razlika_v_dnevih <-  as.Date(as.character(Sys.Date()), format="%Y-%m-%d")-
+  as.Date(as.character((Trenutni_trenerji$Appointed)), format="%Y-%m-%d")
+
+print(ggplot(Trenutni_trenerji, aes(x=as.numeric(razlika_v_dnevih), y= Name)) + geom_point())+  ylab("Trener")+ xlab("Število dni")
+
+# Graf od ustanovitve premier lige, najuspešnejši trenerji
+
+stevilo_naslovov <- NajbolSi_trenerji %>% group_by(Trener) %>% tally()
+print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip() + ylab("Število naslovov")
+
+
+# Vprašanja: Graf 2  in Graf 4 pri legendi 
 #=========================================================================================================================================================================================
 #=========================================================================================================================================================================================
 
