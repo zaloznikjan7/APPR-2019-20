@@ -50,24 +50,24 @@ Uvozil sem podatke o prvi angleški ligi v obliki CSV s spletne strani https://d
   - `Zadetki_gostujoča_ekipa_polčas` - spremenljivka: število zadetkov domačih (število: 0, 1, 2, 3, 4, 5; kjer nikoli nobena ekipa ni zadela več kot 5 zadetkov)
   - `Rezultat_polčas` - spremenljivka: Rezultat ob polčasu (črka : H = vodstvo domačih, D = izenačeno, A = vodstvo gostov),
   - `Sodnik` - spremenljivka: ime in priimek sodnika (neurejen faktor)
-  - `Streli_domači` - spremenljivka: število strelov domačih (število),
+  - `Streli_domaci` - spremenljivka: število strelov domačih (število),
   - `Streli_gostje` - spremenljivka: število strelov gostov (število),
-  - `Streli_domači_v_okvir` - spremenljivka: število strelov v okvir domači (število),
+  - `Streli_domaci_v_okvir` - spremenljivka: število strelov v okvir domači (število),
   - `Streli_gostje_v_okvir` - spremenljivka: število strelov gostov (število),
-  - `Prekrški_domači` - spremenljivka: število prekrškov domači (število),
-  - `Prekrški_gostje` - spremenljivka: število prekrškov gostje (število),
-  - `Koti_domači` - spremenljivka: število kotov domači (število),
+  - `Prekrski_domači` - spremenljivka: število prekrškov domači (število),
+  - `Prekrski_gostje` - spremenljivka: število prekrškov gostje (število),
+  - `Koti_domaci` - spremenljivka: število kotov domači (število),
   - `Koti_gostje` - spremenljivka: število kotov gostje (število),
-  - `Rumeni_karton_domači` - spremenljivka: število rumenih kartovno domači (število),
+  - `Rumeni_karton_domaci` - spremenljivka: število rumenih kartovno domači (število),
   - `Rumeni_karton_gostje` - spremenljivka: število rumenih kartonov gostje (število),
-  - `Rdeč_karton_domači` - spremenljivka: število rdečih kartonov domači (število),
-  - `Rdeč_karton_gostje` - spremenljivka: število rdečih kartonov gostje (število),
-  - `Kvota_zmaga_domačin` - spremenljivka: kvota za zmago domačih (število),
-  - `Kvota_neodločeno` - spremenljivka: kvota za neodločen izid (število)
+  - `Rdec_karton_domaci` - spremenljivka: število rdečih kartonov domači (število),
+  - `Rdec_karton_gostje` - spremenljivka: število rdečih kartonov gostje (število),
+  - `Kvota_zmaga_domacin` - spremenljivka: kvota za zmago domačih (število),
+  - `Kvota_neodloceno` - spremenljivka: kvota za neodločen izid (število)
   - `Kvota_zamga_gost` - spremenljivka: kvota za zmago gostov (število).
   
 
-2. `Najboljši_trenerji` - trenerji, ki so osvojili ligo
+2. `Najboljsi_trenerji` - trenerji, ki so osvojili ligo
   - `Leto` - spremenljivka: leto (število),
   - `Trener` - spremenljivka: ime in priimek trenerja (neurejen faktor),
   - `Klub` - spremenljivka: s katerim klubom je trener osvojil ligo (besedilo).
@@ -95,6 +95,12 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
 Cilj moje naloge je ugotoviti, katere ekipe so v zadnjih desetih letih najbolj uspešne in kako to sovpada s statističnimi podatki, želim pokazati, da so ekipe načeloma uspešnejše, ko igrajo na domačem terenu. Zanimajo me tudi bolj splošni podatki, kot je na primer poštenost ekip, ki se kaže z rumenimi in rdečimi kartoni. Pokazal bom tudi, da je število kartonov zelo odvisna od sodnika, torej da nekateri sodniki hitreje posežejo po kartonu kot drugi(to bom pokazal s povprečjem, ki ga ima posamezen sodnik, na primer Mark Klettenburg 3.2 rumenih kartonov in 0.2 rdečih kartonov na tekmo).
+
+```{r Zadetki, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
+```
+
+
 
 
 ```{r zemljevid, echo=FALSE, fig.align='center', fig.cap='Zemljevid povprečnega števila otrok v družini'}
