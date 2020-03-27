@@ -150,11 +150,10 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 #tmap_options(max.categories=nrow(obcine))
 # Iz kere strani je vceri potegno zemljevid Slonokoscene obale
 
-##
-UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_1",
-                      encoding="UTF-8")
+England <- uvozi.zemljevid("https://map.igismap.com/igismap/Api/Api_download/downloadGlobalFile?out=shp&layerid=c5ff2543b53f4cc0ad3819a36752467b&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OTA3MCwiZW1haWwiOiJibGFja3ZzbGV2aUBnbWFpbC5jb20iLCJpYXQiOjE1ODUzMTY0NTIsImV4cCI6MTU4NTQwMjg1Mn0.Ej_GBIhwzdWWXpiaIPv2f_Zu8Pr83Jup3UU4qBn9MN4",
+"England_AL4-AL4", encoding = "UTF-8")
 
-tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE)
+tm_shape(England) + tm_polygons("name") + tm_legend(show=FALSE)
 
 #UK.ggplot <- fortify(UK)
 
