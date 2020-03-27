@@ -151,10 +151,10 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 # Iz kere strani je vceri potegno zemljevid Slonokoscene obale
 
 ##
-#UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_1",
-#                      encoding="UTF-8")
+UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_1",
+                      encoding="UTF-8")
 
-#tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE)
+tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE)
 
 #UK.ggplot <- fortify(UK)
 

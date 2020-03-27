@@ -7,6 +7,7 @@ library(ggplot2)
 library(dplyr)
 library(plotrix)
 library(plotly)
+library(tmap)
 
 # Uvozimo funkcije za pobiranje in uvoz zemljevida.
 source("lib/uvozi.zemljevid.r", encoding="UTF-8")
