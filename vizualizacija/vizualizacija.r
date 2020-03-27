@@ -15,16 +15,13 @@ Primerjava_zadetkov_domace_gostujoce_ekipe_graf <- ggplot(povprecje_golov, aes(x
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
 print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
 
-Napoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
-print(Napoved_golov)
-
 #=========================================================================================================================================================================================
 # Drugi graf (Osvojene tocke v zadnjih 10 sezonah)
 zmage <- Sezone %>%
   transmute(Domaca_ekipa, Gostujoca_ekipa,
-            Zmaga_domaci<-Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa,
-            Remi<-Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa,
-            Zmaga_gosti<-Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa)
+            Zmaga_domaci = Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa,
+            Remi=Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa,
+            Zmaga_gosti= Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa)
 zmage.skupaj <- rbind(select(zmage, Ekipa=Domaca_ekipa, Zmaga=Zmaga_domaci, Remi, Poraz=Zmaga_gosti),
                       select(zmage, Ekipa=Gostujoca_ekipa, Zmaga=Zmaga_gosti, Remi, Poraz=Zmaga_domaci)) %>%
                       group_by(Ekipa) %>% summarise(Zmage=sum(Zmaga), Remiji=sum(Remi), Porazi=sum(Poraz)) %>%
@@ -40,7 +37,7 @@ tocke <- Sezone %>%
                                    ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
 tocke.skupaj <- rbind(select(tocke, Ekipa=Domaca_ekipa, Tocke=Tocke_domaci),
                       select(tocke, Ekipa=Gostujoca_ekipa, Tocke=Tocke_gostujoci)) %>%
-  group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
+                       group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
 #=========================================================================================================================================================================================
 # 3. graf
 # diagram, ki kaze da dobijo gostje veliko vec rumenih kartonov kot domaci // to bi se lahk naredu po sezonah in eno skupno bi blo bolj zanimivo  
@@ -79,8 +76,8 @@ Sodniki_rumeni_kartoni <- Sezone %>%
 
 #### 4. graf, koliko rumenih kartonov dodeli sodnik na posamezni tekmi ####
 ggplot(Sodniki_rumeni_kartoni,aes(x= Sodniki_rumeni_kartoni$Sodnik,y= Sodniki_rumeni_kartoni$povprecno_rumeni_karton))+ geom_col() + coord_flip()+
-  geom_hline(aes(yintercept= povprecno_rumenih_kartonov, color = "red"))+ xlab("Sodnik") +
-  ylab("stevilo rumenih kartonov") + ggtitle("Število dodeljenih rumenih kartonov v povprečju") + labs(color="Legenda")  
+  geom_hline(aes(yintercept = povprecno_rumenih_kartonov), color = "red")+ xlab("Sodnik") +
+  ylab("stevilo rumenih kartonov") + ggtitle("Število dodeljenih rumenih kartonov v povprečju")
   
 
 ####5 . graf (Povprecno rdeci kartoni) ####
@@ -131,7 +128,8 @@ stevilo_naslovov <- NajbolSi_trenerji %>% group_by(Trener) %>% tally()
 print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip() + ylab("Število naslovov")
 
 
-# Vprašanja: Graf 2  in Graf 4 pri legendi 
+# Vprašanja: Graf 4 še kr ne gre, uprašat če je dovolj tta vizualizacija to pa da še za analizo uprašam, plus da bi dodal porazdelitveno fukncijoc(Za vsako sezono posebi)
+# pol bi dodal pa še kaj z inner_joinom, pol pa sm dejansko konec in če še naj kaj popravim. 
 #=========================================================================================================================================================================================
 #=========================================================================================================================================================================================
 

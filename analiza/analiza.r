@@ -11,3 +11,6 @@
 # skupine <- hclust(dist(scale(podatki))) %>% cutree(n)
 
 
+
+Napoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
+print(Napoved_golov)
