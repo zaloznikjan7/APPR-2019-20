@@ -59,5 +59,9 @@ uvozi.trenerje <- function() {
 }
 Trenutni_trenerji <- uvozi.trenerje()
 
-# Dodat stolpec za datum #parse_date(as.character(Sys.Date())) - Trenutni_trenerji$Appointed
+uvozi.stadione <- function(){
+  Koordinate <- read_csv("podatki/stadiums.csv",locale=locale(encoding="utf8"))
+}
+stadioni <- uvozi.stadione()
+
 
