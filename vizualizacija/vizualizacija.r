@@ -165,7 +165,12 @@ tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE) + tm_dots(size = 0.
 library(rworldmap)
 newmap <- getMap(resolution = "high")
 plot(newmap, xlim = c(-3, -2), ylim = c(50, 57), asp = 1)
-points()
 
+mesta <- c("Liverpool", "Manchester United", "Newcastle")
+lon <- c( 53.400002, 52, 51 )
+lat <- c(-2.983333,-1, -2)
+Koordinate <- data.frame(mesta,lon, lat)
+
+points(Koordinate$lat, Koordinate$lon, col = "red")
 
 
