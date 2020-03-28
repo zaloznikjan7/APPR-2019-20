@@ -160,9 +160,12 @@ zem + tm_compass(type = "8star", position = c("left", "top")) +   tm_scale_bar(b
 
 UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_1",
                       encoding="UTF-8")
-tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE) + tm_dots(size = 0.5, shape= 2)
+tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE) + tm_dots(size = 0.5, shape= 5, position_dodge(width = 0.5),)
 
-
+library(rworldmap)
+newmap <- getMap(resolution = "high")
+plot(newmap, xlim = c(-3, -2), ylim = c(50, 57), asp = 1)
+points()
 
 
 
