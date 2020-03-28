@@ -1,22 +1,5 @@
 # 2. faza: Uvoz podatkov
-library(dplyr)
-library(knitr)
-library(rmarkdown)
-library(shiny)
-library(DT)
-library(rgdal)
-library(rgeos)
-library(digest)
-library(readr)
-library(rvest)
-library(tidyr)
-library(dplyr)
-library(gsubfn)
-library(ggplot2)
-library(mosaic)
-library(maptools)
-library(extrafont)
-library(plyr)
+
 
 nova_imena = c("Domaca_ekipa" = "HomeTeam", "Gostujoca_ekipa" = "AwayTeam", "Zadetki_domaca_ekipa" = "FTHG", "Zadetki_gostujoca_ekipa" = "FTAG", "Rezultat" = "FTR", "Zadetki_domaca_ekipa_polcas" = "HTHG",
                "Zadetki_gostujoca_ekipa_pocas" = "HTAG", "Rezultat_polcas" = "HTR", "Sodnik" = "Referee", "Streli_domaci" = "HS", "Streli_gostje" = "AS", "Streli_domaci_v_okvir" = "HST", "Streli_gosti_v_okvir" = "AST",
@@ -31,7 +14,7 @@ uvozi.podatke <- function() {
   for (i in 9:18) {
     datoteka <- sprintf("podatki/season-%02d%02d.csv", i, i+1)
     Sezona <- read_csv(datoteka, locale=locale(encoding="utf8")) %>%
-      select_(.dots = kaj_obravnavam) %>%
+      select_(.dots =  kaj_obravnavam) %>%
       rename_(.dots = nova_imena)
     Sezona$Sezona <- 2000 + i
     PociSceni_podatki <- rbind(PociSceni_podatki, Sezona) 
