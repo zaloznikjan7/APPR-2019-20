@@ -29,15 +29,7 @@ zmage.skupaj <- rbind(select(zmage, Ekipa=Domaca_ekipa, Zmaga=Zmaga_domaci, Remi
 
 print(ggplot(zmage.skupaj, aes(x=reorder(Ekipa, Tocke), y=Tocke)) + geom_col() + coord_flip() + xlab("Ekipa") + ylab("Tocke"))
 
-tocke <- Sezone %>%
-  transmute(Domaca_ekipa, Gostujoca_ekipa,
-            Tocke_domaci=ifelse(Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa, 3,
-                                ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
-            Tocke_gostujoci=ifelse(Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa, 3,
-                                   ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
-tocke.skupaj <- rbind(select(tocke, Ekipa=Domaca_ekipa, Tocke=Tocke_domaci),
-                      select(tocke, Ekipa=Gostujoca_ekipa, Tocke=Tocke_gostujoci)) %>%
-                       group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
+
 #=========================================================================================================================================================================================
 # 3. graf
 # diagram, ki kaze da dobijo gostje veliko vec rumenih kartonov kot domaci // to bi se lahk naredu po sezonah in eno skupno bi blo bolj zanimivo  
@@ -162,11 +154,25 @@ UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_sh
                       encoding="UTF-8")
 tm_shape(UK) + tm_polygons("NAME_1") + tm_legend(show=FALSE) + tm_dots(size = 0.5, shape= 5, position_dodge(width = 0.5),)
 
-library(rworldmap)
+install.packages("rworldxtra")
 newmap <- getMap(resolution = "high")
-plot(newmap, xlim = c(-3, -2), ylim = c(50, 57), asp = 1)
+plot(newmap, xlim = c(-5, 0), ylim = c(50, 58), asp = 1)
 
+stadioni
+iz_sezone_2018 <- Sezone %>%  filter(Sezona == 2018)
+Seznam_ekip <- iz_sezone_2018 %>% select(Domaca_ekipa) %>% group_by(Domaca_ekipa) %>% count() %>% select(Domaca_ekipa)
 mesta <- c("Liverpool", "Manchester United", "Newcastle")
+
+tocke <- Sezone %>%
+  transmute(Domaca_ekipa, Gostujoca_ekipa,
+            Tocke_domaci=ifelse(Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa, 3,
+                                ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
+            Tocke_gostujoci=ifelse(Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa, 3,
+                                   ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
+tocke.skupaj <- rbind(select(tocke, Ekipa=Domaca_ekipa, Tocke=Tocke_domaci),
+                      select(tocke, Ekipa=Gostujoca_ekipa, Tocke=Tocke_gostujoci)) %>%
+  group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
+
 lon <- c( 53.400002, 52, 51 )
 lat <- c(-2.983333,-1, -2)
 Koordinate <- data.frame(mesta,lon, lat)
