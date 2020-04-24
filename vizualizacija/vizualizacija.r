@@ -2,6 +2,7 @@
 #1. POVPREcNO sTEVILO DOSEzENIH ZADETKOV DOMAcINOV IN GOSTOV
 
 #1. graf
+
 preimenovanje <- c("Zadetki_domaca_ekipa"="Domači", "Zadetki_gostujoca_ekipa"="Gosti")
 povprecje_golov <- Sezone %>% select(Sezona, Zadetki_domaca_ekipa, Zadetki_gostujoca_ekipa) %>%
   gather(key=Gostovanje, value="Zadetki", -Sezona) %>%
