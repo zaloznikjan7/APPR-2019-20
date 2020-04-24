@@ -14,8 +14,8 @@ uvozi.podatke <- function() {
   for (i in 9:18) {
     datoteka <- sprintf("podatki/season-%02d%02d.csv", i, i+1)
     Sezona <- read_csv(datoteka, locale=locale(encoding="utf8")) %>%
-      select_(.dots =  kaj_obravnavam) %>%
-      rename_(.dots = nova_imena)
+      select(!!! syms(kaj_obravnavam)) %>%
+      rename(syms(setNames(names(nova_imena), nova_imena)))
     Sezona$Sezona <- 2000 + i
     PociSceni_podatki <- rbind(PociSceni_podatki, Sezona) 
   }
