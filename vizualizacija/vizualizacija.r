@@ -158,18 +158,17 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 
 UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_2",
                       encoding="UTF-8")
-tm_shape(UK) + tm_polygons("NAME_0") + tm_legend(show=FALSE)
+tm_shape(UK) + tm_polygons("NAME_2") + tm_legend(show=FALSE)
 
+Poskus <- UK$NAME_2
+KRUH <- factor(c("Aberdeen", "Manchester","Barnsley"))
+levels(UK$NAME_2)
+kruh2 <- order(c("Aberdeen", "Manchester","Barnsley"))
+KRUH <- KRUH[kruh2]
+#Uprašat kak se naredi sam Wales pa England
 
-
-
-
-
-
-
-
-
-
+match("Barnsley", Poskus)
+Poskus[match("Barnsley", Poskus)] <- "BARNSLEY"
 
 
 #### Moja ideja, ki mi je bolj všeč :/ 
