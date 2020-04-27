@@ -158,19 +158,45 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 
 UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_2",
                       encoding="UTF-8")
-tm_shape(UK) + tm_polygons("NAME_2") + tm_legend(show=FALSE)
+tm_shape(UK[]) + tm_polygons("NAME_2") + tm_legend(show=FALSE)
 
 Poskus <- UK$NAME_2
 KRUH <- factor(c("Aberdeen", "Manchester","Barnsley"))
 levels(UK$NAME_2)
 kruh2 <- order(c("Aberdeen", "Manchester","Barnsley"))
 KRUH <- KRUH[kruh2]
-#Uprašat kak se naredi sam Wales pa England
+
 
 match("Barnsley", Poskus)
 Poskus[match("Barnsley", Poskus)] <- "BARNSLEY"
 
+Klubi_ki_so_omenjeni <- factor(c("Manchester", "Bournemouth", "Leicester", "Middlesbrough", "Southampton", "Stoke City", "Cardif"))
+Ostali_klubi <- factor(c("Arsenal", "Chelsea", "Tottenham","Crystle Palace", "Manchester City", "Newcastle", "Wolverhapmton", "Liverpool", "Watford", "West Ham","Huddersfield Town", "Fulham", "Everton", "Brighton", "Burnley"))
 
+# Stoke-on-Trent
+# Arsenal - Camden
+# Chelsea - Kensington and Chelsea
+# Tottenham - Hackney
+# Crystle Palace - Bromley
+# Manchester City- Warrington
+# Newcastle - Tyne and Wear
+# Wolerhampton - West Midlands
+# Liverpool - Merseyside
+# Watford - Waltham Forest
+# West Ham - Barking and Dagenham
+# Huddersfiel Town - West Yorkshire
+# Fulham - Hammersmith and Fulham
+# Everton -Lancashire
+# Brighton - Hampshire
+# Burnley - York
+
+
+# Uprašat kak se naredi sam Wales pa England
+# kak naj zaj to zamenjam z NAME_2, kje sploh jemlje NAME_2,
+
+
+
+JAN <- Sezone %>% filter(Sezona == "2018") %>% group_by(Domaca_ekipa) %>% count()
 #### Moja ideja, ki mi je bolj všeč :/ 
 # install.packages("rworldxtra")
 # newmap <- getMap(resolution = "high")
