@@ -158,11 +158,12 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 
 UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_2",
                       encoding="UTF-8")
-tm_shape(UK) + tm_polygons("NAME_0") + tm_legend(show=FALSE)
+tm_shape(UK %>% filter(NAME_2 == "England")) + tm_polygons("NAME_0") + tm_legend(show=FALSE)
 
+JANN <- UK %>% filter(NAME_2 == "England")
 
-
-
+UK2 <- UK[UK$NAME_2 == "England",]
+Jan <- Sezone %>% filter(Sezona == "2015")
 
 
 
