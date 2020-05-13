@@ -159,19 +159,60 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_2",
                       encoding="UTF-8")
 
-Klubi_ki_so_omenjeni <- factor(c("Manchester", "Bournemouth", "Leicester", "Middlesbrough", "Southampton", "Stoke City", "Cardif"))
+#Klubi_ki_so_omenjeni <- factor(c("Manchester", "Bournemouth", "Leicester", "Middlesbrough", "Southampton", "Stoke City", "Cardif"))
 Ostali_klubi <- factor(c("Arsenal", "Chelsea", "Tottenham","Crystle Palace", "Manchester City", "Newcastle", "Wolverhapmton", "Liverpool", "Watford", "West Ham","Huddersfield Town", "Fulham", "Everton", "Brighton", "Burnley"))
 
 
-klubi <- c("Arsenal"="Barnsley",
+klubi <- c("Man United"="Manchester",
+           "Man City" = "Salford",
            "Chelsea"="Birmingham",
-           "Tottenham"="Bolton")
+           "Tottenham"="Bolton",
+           "Stoke City" = "Stoke-on-Trent",
+           "Bournemouth" = "Bournemouth",
+           "Leicester" = "Leicester",
+           "Middlesbrough" = "Middlesbrough",
+           "Southampton" = "Southampton",
+           "Cardiff" = "Cardiff",
+           "Swansea" = "Swansea",
+           "Bolton" = "Bolton",
+           "Brighton" = "Brighton and Hove",
+           "Birmingham" = "Birmingham",
+           "Blackpool" = "Blackpool",
+           "Bolton" = "Bolton",
+           "Reading" = "Reading",
+           "Bristol" = "Bristol",
+           "Blackpool" = "Blackpool",
+           "Huddersfield" = "Calderdale",
+           "Everton" = "Sefton",
+           "Aston Villa" = "Coventry",
+           "Newcastle" = "Newcastle upon Tyne",
+           "Wigan" = "Wigan",
+           "Wolverhampton" = "Wolverhampton",
+           "Sunderland" = "Sunderland", 
+           "West Brom" = "Dudley",
+           "Liverpool" = "Saint Helens",
+           "Hull" = "Kingston upon Hull",
+           "Watford" = "Luton",
+           "Burnley" = "Bury",
+           "Norwich" = "Peterborough",
+           "Arsenal" = "Greater London",
+           "West Ham" = "Greater London",
+           "Fulham" = "Greater London",
+           "Chelsea"= "Greater London",
+           "Crystal Palace" = "Greater London",
+           "QPR" = "Greater London",
+           "Tottenham" = "Greater London",
+           "Wolves" = "Wolverhampton"
+           
+           )
 klubi.regija <- data.frame(Ekipa=names(klubi),
                            Regija=parse_factor(klubi, levels(UK$NAME_2)),
                            stringsAsFactors=FALSE)
 EngWal <- UK[UK$NAME_1 %in% c("England", "Wales"),]
+
 tocke.regije <- tocke.skupaj %>% inner_join(klubi.regija) %>%
-  group_by(Regija) %>% summarise(Tocke=sum(Tocke))
+  group_by(Regija) %>% summarise(Tocke=mean(Tocke))
+
 zem.tocke <- merge(EngWal, tocke.regije, by.x="NAME_2", by.y="Regija")
 
 tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
@@ -182,22 +223,6 @@ tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
 
 
 
-# Stoke-on-Trent
-# Arsenal - Camden
-# Chelsea - Kensington and Chelsea
-# Tottenham - Hackney
-# Crystle Palace - Bromley
-# Manchester City- Warrington
-# Newcastle - Tyne and Wear
-# Wolerhampton - West Midlands
-# Liverpool - Merseyside
-# Watford - Waltham Forest
-# West Ham - Barking and Dagenham
-# Huddersfiel Town - West Yorkshire
-# Fulham - Hammersmith and Fulham
-# Everton -Lancashire
-# Brighton - Hampshire
-# Burnley - York
 
 
 
