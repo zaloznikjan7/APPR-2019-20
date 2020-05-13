@@ -77,7 +77,7 @@ Uvozil sem podatke o prvi angleški ligi v obliki CSV s spletne strani https://d
   - `Club` - spremenljivka: ime kluba (besedilo),
   - `Appointed` - spremenljivka: datum, ko so predstavili trenerja (števili in besedilo).
 
-**Opomba**: da bi razpredelnica `obcine` res bila v obliki *tidy data*, bi morali odstraniti stolpec `gostota` (saj je izpeljan iz stolpcev `povrsina` in `prebivalci`), podatke o pokrajinah pa bi morali premakniti v drugo razpredelnico, saj nekatere občine pripadajo dvema pokrajinama. Podobno bi morali narediti tudi s stolpcem `odcepitev`.
+
 
 Spodnji graf prikazuje porazdelitev števila naselij v občinah.
 

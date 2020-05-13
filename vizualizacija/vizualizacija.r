@@ -232,13 +232,12 @@ Lond <- UK2[UK2$NAME_2 %in% c("Greater London"),]
 klubi.regija2 <- data.frame(Ekipa=names(klubi2),
                            Regija=parse_factor(klubi2, levels(UK2$NAME_3)),
                            stringsAsFactors=FALSE)
-tocke.regije2 <- tocke.skupaj %>% inner_join(klubi.regija2) #%>%
- #group_by(Regija) %>% summarise(Tocke=mean(Tocke))
+tocke.regije2 <- tocke.skupaj %>% inner_join(klubi.regija2)
 
 zem.tocke2 <- merge(Lond, tocke.regije2, by.x="NAME_3", by.y="Regija")
 
 
-zemljevi_london <- tm_shape(zem.tocke2) + tm_polygons("Tocke") + tm_legend(show=TRUE)
+zemljevid_london <- tm_shape(zem.tocke2) + tm_polygons("Tocke") + tm_legend(show=TRUE)
 
 
 

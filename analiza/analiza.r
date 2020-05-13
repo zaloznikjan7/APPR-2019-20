@@ -11,38 +11,33 @@
 # skupine <- hclust(dist(scale(podatki))) %>% cutree(n)
 
 
-
+#=========================================================================================================================================================================================
+# 1. napredna analiza
 Napoved_golov <- Primerjava_zadetkov_domace_gostujoce_ekipe_graf + geom_smooth(method="lm")
-print(Napoved_golov)
 
 
 
-
-tocke <- Sezone %>%
-  transmute(Domaca_ekipa, Gostujoca_ekipa,
-            Tocke_domaci=ifelse(Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa, 3,
-                                ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
-            Tocke_gostujoci=ifelse(Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa, 3,
-                                   ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
-tocke.skupaj <- rbind(select(tocke, Ekipa=Domaca_ekipa, Tocke=Tocke_domaci),
-                      select(tocke, Ekipa=Gostujoca_ekipa, Tocke=Tocke_gostujoci)) %>%
-  group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
-
-tocke_domacii <- tocke %>% group_by(Domaca_ekipa) %>%
-  summarise(Domace_tocke=sum(Tocke_domaci)) %>% rename(Ekipa=Domaca_ekipa)
-gostujoce_tocke <- tocke %>% group_by(Gostujoca_ekipa) %>%
-  summarise(Gostujoce_tocke=sum(Tocke_gostujoci)) %>% rename(Ekipa=Gostujoca_ekipa)
-
-
-tocke.domaci.gosti <- inner_join(tocke_domacii, gostujoce_tocke)
-rownames(tocke.domaci.gosti) <- tocke.domaci.gosti$Ekipa
-km <- tocke.domaci.gosti%>% select(-Ekipa) %>% scale() %>% kmeans(5)
-skupine <- data.frame(Ekipa=tocke.domaci.gosti$Ekipa, Skupina=factor(km$cluster),
+#=========================================================================================================================================================================================
+# 2. napredna analiza
+tocke_domaci_gosti <- inner_join(tocke_domacii, gostujoce_tocke)
+rownames(tocke.domaci.gosti) <- tocke_domaci_gosti$Ekipa
+razdelitev <- tocke_domaci_gosti %>% select(-Ekipa) %>% scale() %>% kmeans(5)
+skupine <- data.frame(Ekipa=tocke_domaci_gosti$Ekipa, Skupina=factor(razdelitev$cluster),
                       stringsAsFactors=FALSE)
-# Kak bi lahk iz tega zaj naredu napredno analizo? 
 
 
+tocke_regije3 <- skupine %>% inner_join(klubi.regija) %>% select(Regija, Skupina)
+zem.tocke3 <- merge(EngWal, tocke_regije3, by.x="NAME_2", by.y="Regija")
+zemljevid_skupin <- tm_shape(zem.tocke3) + tm_polygons("Skupine") + tm_legend(show=FALSE)
+
+#=========================================================================================================================================================================================
+# Samo v Londonu
 
 
+tocke_regije4 <- skupine %>% inner_join(klubi.regija3)
+zem.tocke4 <- merge(Lond, tocke_regije4, by.x="NAME_3", by.y="Regija")
+zemljevid_london_skupin <- tm_shape(zem.tocke4) + tm_polygons("Skupine") + tm_legend(show=TRUE)
 
-# Kak bi lahk iz tega zaj naredu napredno analizo? 
+
+ 
+
