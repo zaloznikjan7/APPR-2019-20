@@ -219,11 +219,25 @@ tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
 
 # LONDON
 
-Lond <- UK[UK$NAME_2 %in% c("Greater London"),]
+UK2 <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_3",
+                      encoding="UTF-8")
+
+klubi2 <- c(  "Arsenal" = "Greater London",
+              "West Ham" = "Barking and Dagenham",
+              "Fulham" = "Greater London",
+              "Chelsea"= "Greater London",
+              "Crystal Palace" = "Greater London",
+              "QPR" = "Greater London",
+              "Tottenham" = "Greater London")
+
+Lond <- UK2[UK2$NAME_2 %in% c("Greater London"),]
+
+klubi.regija2 <- data.frame(Ekipa=names(klubi2),
+                           Regija=parse_factor(klubi2, levels(UK$NAME_3)),
+                           stringsAsFactors=FALSE)
 
 
-
-
+tm_shape(Lond) + tm_polygons("NAME_3") + tm_legend(show=FALSE)
 
 
 #### Moja ideja
