@@ -158,11 +158,6 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 
 UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_2",
                       encoding="UTF-8")
-
-#Klubi_ki_so_omenjeni <- factor(c("Manchester", "Bournemouth", "Leicester", "Middlesbrough", "Southampton", "Stoke City", "Cardif"))
-Ostali_klubi <- factor(c("Arsenal", "Chelsea", "Tottenham","Crystle Palace", "Manchester City", "Newcastle", "Wolverhapmton", "Liverpool", "Watford", "West Ham","Huddersfield Town", "Fulham", "Everton", "Brighton", "Burnley"))
-
-
 klubi <- c("Man United"="Manchester",
            "Man City" = "Salford",
            "Chelsea"="Birmingham",
@@ -222,14 +217,16 @@ tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
 
 
 
+# LONDON
+
+Lond <- UK[UK$NAME_2 %in% c("Greater London"),]
 
 
 
 
 
 
-JAN <- Sezone %>% filter(Sezona == "2018") %>% group_by(Domaca_ekipa) %>% count()
-#### Moja ideja, ki mi je bolj všeč :/ 
+#### Moja ideja
 # install.packages("rworldxtra")
 # newmap <- getMap(resolution = "high")
 # plot(newmap, xlim = c(-5, 0), ylim = c(50, 58), asp = 1)
