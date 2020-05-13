@@ -14,7 +14,7 @@ Primerjava_zadetkov_domace_gostujoce_ekipe_graf <- ggplot(povprecje_golov, aes(x
   geom_line() + 
   xlab("Sezona") + ylab("Povprečje zadetkov") + ggtitle("Primerjava zadetkov domače in gostujoče ekipe") +
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
-print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
+
 
 #=========================================================================================================================================================================================
 # Drugi graf (Osvojene tocke v zadnjih 10 sezonah)
@@ -28,7 +28,7 @@ zmage.skupaj <- rbind(select(zmage, Ekipa=Domaca_ekipa, Zmaga=Zmaga_domaci, Remi
                       group_by(Ekipa) %>% summarise(Zmage=sum(Zmaga), Remiji=sum(Remi), Porazi=sum(Poraz)) %>%
                       mutate(Tocke = 3*Zmage + Remiji)
 
-print(ggplot(zmage.skupaj, aes(x=reorder(Ekipa, Tocke), y=Tocke)) + geom_col() + coord_flip() + xlab("Ekipa") + ylab("Tocke"))
+Najuspesnejse_ekipe <- (ggplot(zmage.skupaj, aes(x=reorder(Ekipa, Tocke), y=Tocke)) + geom_col() + coord_flip() + xlab("Ekipa") + ylab("Tocke"))
 
 
 #=========================================================================================================================================================================================
@@ -47,9 +47,9 @@ stolpicni_graf_prejetih_rumenih_kartonov <- ggplot(kartoni2,  aes(x= Ekipa, y = 
                               position = position_dodge(width = 1.5), vjust = -0.5) +
                               ylab("stevilo kartonov") + ggtitle("Primerjava prejetih rumenih kartonov domace in gostujoce ekipe") +
                               theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
-print(stolpicni_graf_prejetih_rumenih_kartonov)
 
 
+#=========================================================================================================================================================================================
 
 
 # kolk kartonov dajo vsi sodniki povprecno skup
@@ -72,7 +72,7 @@ ggplot(Sodniki_rumeni_kartoni,aes(x= Sodniki_rumeni_kartoni$Sodnik,y= Sodniki_ru
   geom_hline(aes(yintercept = povprecno_rumenih_kartonov), color = "red")+ xlab("Sodnik") +
   ylab("stevilo rumenih kartonov") + ggtitle("Število dodeljenih rumenih kartonov v povprečju")
   
-
+#=========================================================================================================================================================================================
 ####5 . graf (Povprecno rdeci kartoni) ####
 
 stevilo_vseh_rdecih_kartonov_domaci <- sum(Sezone$Rdec_karton_domaci, na.rm = TRUE)
@@ -88,10 +88,10 @@ stolpicni_graf_prejetih_rdecih_kartonov <- ggplot(rdec_kartoni2,  aes(x= Ekipa, 
                          position = position_dodge(width = 1), vjust = -1) +
   ylab("Število kartonov") + ggtitle("Primerjava prejetih rdečih kartonov domače in gostujoče ekipe") +
   theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
-print(stolpicni_graf_prejetih_rdecih_kartonov)
 
 
 
+#=========================================================================================================================================================================================
 
 #prekrški 
 Prekrski_domacini <- Sezone %>% select(Domaca_ekipa, PrekrSki_domaci) %>%
@@ -104,55 +104,48 @@ Prekrski_gostjee <- Sezone %>% select(Gostujoca_ekipa, PrekrSki_gostje) %>%
 Prekrski_skupaj <- rbind(select(Prekrski_domacini, Ekipa=Domaca_ekipa, prek= skupek),
                         select(Prekrski_gostjee, Ekipa=Gostujoca_ekipa, prek= skupek)) %>%
                         group_by(Ekipa) %>% summarise("Prekrški"=sum(prek))
-print(ggplot(Prekrski_skupaj, aes(x=reorder(Ekipa, Prekrški), y=Prekrški)) + geom_point() + xlab("Ekipa")+ coord_flip() + ylab("Število prekrškov"))
+graf_prekrskov <- ggplot(Prekrski_skupaj, aes(x=reorder(Ekipa, Prekrški), y=Prekrški)) + geom_point() + xlab("Ekipa")+ coord_flip() + ylab("Število prekrškov")
 
 
-
+#=========================================================================================================================================================================================
 # Graf kolk dni je kdo trener
 
 Trenutni_trenerji$razlika_v_dnevih <-  as.Date(as.character(Sys.Date()), format="%Y-%m-%d")-
   as.Date(as.character((Trenutni_trenerji$Appointed)), format="%Y-%m-%d")
 
-print(ggplot(Trenutni_trenerji, aes(x=as.numeric(razlika_v_dnevih), y= Name)) + geom_point())+  ylab("Trener")+ xlab("Število dni")
+Trenutna_trenerska_doba <- (ggplot(Trenutni_trenerji, aes(x=as.numeric(razlika_v_dnevih), y= Name)) + geom_point())+  ylab("Trener")+ xlab("Število dni")
 
+#=========================================================================================================================================================================================
 # Graf od ustanovitve premier lige, najuspešnejši trenerji
 
 stevilo_naslovov <- NajbolSi_trenerji %>% group_by(Trener) %>% tally()
-print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip() + ylab("Število naslovov")
+Najuspesnejsi_trenerji <- (ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip() + ylab("Število naslovov")
 
 
-# Vprašanja: Graf 4 še kr ne gre, uprašat če je dovolj tta vizualizacija to pa da še za analizo uprašam, plus da bi dodal porazdelitveno fukncijoc(Za vsako sezono posebi)
-# pol bi dodal pa še kaj z inner_joinom, pol pa sm dejansko konec in če še naj kaj popravim. 
+
+
 #=========================================================================================================================================================================================
 #=========================================================================================================================================================================================
 
 #Zemljevidi 
-# Na vajah smo meli obcine in je samo po sebi se izslo ka pa naj js naredim ko mam anglesko ligo? kak zemljevid je fajn uvozit? 
 
 
-#library(tmap)
-#source("https://raw.githubusercontent.com/jaanos/APPR-2019-20/master/lib/uvozi.zemljevid.r")
 
 
-#obcine <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
-#                          pot.zemljevida="OB", encoding="Windows-1250")
+tocke <- Sezone %>%
+  transmute(Domaca_ekipa, Gostujoca_ekipa,
+            Tocke_domaci=ifelse(Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa, 3,
+                                ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
+            Tocke_gostujoci=ifelse(Zadetki_domaca_ekipa < Zadetki_gostujoca_ekipa, 3,
+                                   ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)))
+tocke.skupaj <- rbind(select(tocke, Ekipa=Domaca_ekipa, Tocke=Tocke_domaci),
+                      select(tocke, Ekipa=Gostujoca_ekipa, Tocke=Tocke_gostujoci)) %>%
+  group_by(Ekipa) %>% summarise(Tocke=sum(Tocke))
 
-#names(obcine)
-#tm_shape(obcine) + tm_polygons("OB_UIME") + tm_legend(show=FALSE)
-
-#tmap_options(max.categories=nrow(obcine))
-# Iz kere strani je vceri potegno zemljevid Slonokoscene obale
-
-
-# Zemljevid ki link ne dela dolgo, žal...
-# England <- uvozi.zemljevid("https://map.igismap.com/igismap/Api/Api_download/downloadGlobalFile?out=shp&layerid=c5ff2543b53f4cc0ad3819a36752467b&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OTA3MCwiZW1haWwiOiJibGFja3ZzbGV2aUBnbWFpbC5jb20iLCJpYXQiOjE1ODUzMTY0NTIsImV4cCI6MTU4NTQwMjg1Mn0.Ej_GBIhwzdWWXpiaIPv2f_Zu8Pr83Jup3UU4qBn9MN4",
-#                            "England_AL4-AL4", encoding = "UTF-8")
-# 
-# zem <- tm_shape(England) + tm_polygons("name") + tm_legend(show=FALSE)
-# zem + tm_compass(type = "8star", position = c("left", "top")) +   tm_scale_bar(breaks = c(0, 100, 200), text.size = 0.8) + tm_layout(title = "England")
-#UK.ggplot <- fortify(UK)
-
-
+tocke_domacii <- tocke %>% group_by(Domaca_ekipa) %>%
+  summarise(Domace_tocke=sum(Tocke_domaci)) %>% rename(Ekipa=Domaca_ekipa)
+gostujoce_tocke <- tocke %>% group_by(Gostujoca_ekipa) %>%
+  summarise(Gostujoce_tocke=sum(Tocke_gostujoci)) %>% rename(Ekipa=Gostujoca_ekipa)
 
 
 
@@ -173,6 +166,7 @@ klubi <- c("Man United"="Manchester",
            "Brighton" = "Brighton and Hove",
            "Birmingham" = "Birmingham",
            "Blackpool" = "Blackpool",
+           "Blackburn" ="Blackburn with Darwen",
            "Bolton" = "Bolton",
            "Reading" = "Reading",
            "Bristol" = "Bristol",
@@ -197,6 +191,7 @@ klubi <- c("Man United"="Manchester",
            "Crystal Palace" = "Greater London",
            "QPR" = "Greater London",
            "Tottenham" = "Greater London",
+           "Watford" = "Greater London",
            "Wolves" = "Wolverhampton"
            
            )
@@ -210,7 +205,7 @@ tocke.regije <- tocke.skupaj %>% inner_join(klubi.regija) %>%
 
 zem.tocke <- merge(EngWal, tocke.regije, by.x="NAME_2", by.y="Regija")
 
-tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
+zemljevid_EngWal <- tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
 
 
 
@@ -222,22 +217,32 @@ tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
 UK2 <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_3",
                       encoding="UTF-8")
 
-klubi2 <- c(  "Arsenal" = "Greater London",
+klubi2 <- c(  "Arsenal" = "Hackney",
               "West Ham" = "Barking and Dagenham",
-              "Fulham" = "Greater London",
-              "Chelsea"= "Greater London",
-              "Crystal Palace" = "Greater London",
-              "QPR" = "Greater London",
-              "Tottenham" = "Greater London")
+              "Fulham" = "Hammersmith and Fulham",
+              "Chelsea"= "Kensington and Chelsea",
+              "Crystal Palace" = "Croydon",
+              "QPR" = "Ealing",
+              "Tottenham" = "Enfield",
+              "Watford" = "Harrow"
+                )
 
 Lond <- UK2[UK2$NAME_2 %in% c("Greater London"),]
 
 klubi.regija2 <- data.frame(Ekipa=names(klubi2),
-                           Regija=parse_factor(klubi2, levels(UK$NAME_3)),
+                           Regija=parse_factor(klubi2, levels(UK2$NAME_3)),
                            stringsAsFactors=FALSE)
+tocke.regije2 <- tocke.skupaj %>% inner_join(klubi.regija2) #%>%
+ #group_by(Regija) %>% summarise(Tocke=mean(Tocke))
+
+zem.tocke2 <- merge(Lond, tocke.regije2, by.x="NAME_3", by.y="Regija")
 
 
-tm_shape(Lond) + tm_polygons("NAME_3") + tm_legend(show=FALSE)
+zemljevi_london <- tm_shape(zem.tocke2) + tm_polygons("Tocke") + tm_legend(show=TRUE)
+
+
+
+
 
 
 #### Moja ideja
