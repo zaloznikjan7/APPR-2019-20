@@ -158,29 +158,29 @@ print(ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_point())+ coord_flip()
 
 UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_shp.zip", "gadm36_GBR_2",
                       encoding="UTF-8")
-<<<<<<< HEAD
-tm_shape(UK %>% filter(NAME_2 == "England")) + tm_polygons("NAME_0") + tm_legend(show=FALSE)
-
-JANN <- UK %>% filter(NAME_2 == "England")
-
-UK2 <- UK[UK$NAME_2 == "England",]
-Jan <- Sezone %>% filter(Sezona == "2015")
-=======
-tm_shape(UK[]) + tm_polygons("NAME_2") + tm_legend(show=FALSE)
-
-Poskus <- UK$NAME_2
-KRUH <- factor(c("Aberdeen", "Manchester","Barnsley"))
-levels(UK$NAME_2)
-kruh2 <- order(c("Aberdeen", "Manchester","Barnsley"))
-KRUH <- KRUH[kruh2]
->>>>>>> e20964d2077e5c3099fb4e0b2a00dc95adeada4c
-
-
-match("Barnsley", Poskus)
-Poskus[match("Barnsley", Poskus)] <- "BARNSLEY"
 
 Klubi_ki_so_omenjeni <- factor(c("Manchester", "Bournemouth", "Leicester", "Middlesbrough", "Southampton", "Stoke City", "Cardif"))
 Ostali_klubi <- factor(c("Arsenal", "Chelsea", "Tottenham","Crystle Palace", "Manchester City", "Newcastle", "Wolverhapmton", "Liverpool", "Watford", "West Ham","Huddersfield Town", "Fulham", "Everton", "Brighton", "Burnley"))
+
+
+klubi <- c("Arsenal"="Barnsley",
+           "Chelsea"="Birmingham",
+           "Tottenham"="Bolton")
+klubi.regija <- data.frame(Ekipa=names(klubi),
+                           Regija=parse_factor(klubi, levels(UK$NAME_2)),
+                           stringsAsFactors=FALSE)
+EngWal <- UK[UK$NAME_1 %in% c("England", "Wales"),]
+tocke.regije <- tocke.skupaj %>% inner_join(klubi.regija) %>%
+  group_by(Regija) %>% summarise(Tocke=sum(Tocke))
+zem.tocke <- merge(EngWal, tocke.regije, by.x="NAME_2", by.y="Regija")
+
+tm_shape(zem.tocke) + tm_polygons("Tocke") + tm_legend(show=TRUE)
+
+
+
+
+
+
 
 # Stoke-on-Trent
 # Arsenal - Camden
@@ -200,8 +200,6 @@ Ostali_klubi <- factor(c("Arsenal", "Chelsea", "Tottenham","Crystle Palace", "Ma
 # Burnley - York
 
 
-# Uprašat kak se naredi sam Wales pa England
-# kak naj zaj to zamenjam z NAME_2, kje sploh jemlje NAME_2,
 
 
 
