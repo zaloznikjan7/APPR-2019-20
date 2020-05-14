@@ -79,12 +79,7 @@ Uvozil sem podatke o prvi angleški ligi v obliki CSV s spletne strani https://d
 
 
 
-Spodnji graf prikazuje porazdelitev števila naselij v občinah.
 
-```{r histogram, echo=FALSE, message=FALSE, fig.align='center', fig.cap='Histogram števila naselij v občinah'}
-ggplot(obcine, aes(x=naselja)) + geom_histogram() +
-  ggtitle("Pogostost števila naselij") + xlab("Število naselij") + ylab("Število občin")
-```
 
 ***
 
@@ -96,19 +91,80 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 
 Cilj moje naloge je ugotoviti, katere ekipe so v zadnjih desetih letih najbolj uspešne in kako to sovpada s statističnimi podatki, želim pokazati, da so ekipe načeloma uspešnejše, ko igrajo na domačem terenu. Zanimajo me tudi bolj splošni podatki, kot je na primer poštenost ekip, ki se kaže z rumenimi in rdečimi kartoni. Pokazal bom tudi, da je število kartonov zelo odvisna od sodnika, torej da nekateri sodniki hitreje posežejo po kartonu kot drugi(to bom pokazal s povprečjem, ki ga ima posamezen sodnik, na primer Mark Klettenburg 3.2 rumenih kartonov in 0.2 rdečih kartonov na tekmo).
 
+
+
+
+
+
+Spodnji graf prikazuje povprečno število zadetkov domače in gostujoče ekipe v sezonah od 2009 do 2019. Kot sem predvideval je razlika očitna, kar kaže na to, da ima ekipa pred domačim občinstvom večjo željo po doseganju zadetkov in so pri tem bolj uspešni. 
+
+
 ```{r Zadetki, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
-print(Primerjava_zadetkov_domace_gostujoce_ekipe_graf)
+Primerjava_zadetkov_domace_gostujoce_ekipe_graf
+```
+
+Na naslednjem grafu sem predstavil, najuspešnejše ekipe v tem obdobju. Vidimo lahko, da je Manchester City edino moštvo, ki je skupaj pridobilo več kot 800 točk. Na dnu grafa pa lahko vidimo Middlesbrough, ki je med elito "preživel" samo dve sezoni. V uspešnosti pa izstopa prvih 6 moštev ali kot jim v Veliki Britaniji pravijo "The big six". Na preskoku je pa tudi Everton, ki se počasi bliža nivoju najboljših v Premier league. Kot 7. uvršeno moštvo pa lahko vidimo Stoke City, ki pa je leta 2018 izpadlo iz najmočnejše lige na svetu.
+
+
+```{r Najuspešnejše ekipe, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+Najuspesnejse_ekipe
 ```
 
 
+Zanimalo me je tudi ali so ekipe enakopravne na igrišču, če so torej enako kaznovane, ne glede na to ali igrajo doma ali v gosteh. Ugotovil sem, da sodniki veliko hitreje kaznujejo goste kot pa domače. Težko je oceniti ali je to posledica drugačnega taktičnega pristopa ekip ali pa so sodniki bolj milostni do domačih ekip. Dejstvo pa je, da so sodniki pod večjim pritiskom publike, če kaznujejo domače igralce.
 
 
-```{r zemljevid, echo=FALSE, fig.align='center', fig.cap='Zemljevid povprečnega števila otrok v družini'}
-ggplot() + geom_polygon(data=left_join(zemljevid, povprecja, by=c("OB_UIME"="obcina")),
-                        aes(x=long, y=lat, group=group, fill=povprecje)) +
-  ggtitle("Povprečno število otrok v družini") + xlab("") + ylab("") +
-  guides(fill=guide_colorbar(title="Povprečje"))
+```{r Rumeni kartoni, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+stolpicni_graf_prejetih_rumenih_kartonov
 ```
+
+
+Na naslednjem grafu lahko vidimo, povprečno število rumenih kartonov vseh sodnikov, ki so v tem obdobju na zelenici delili pravico. Rdeča črta označuje povprečje vseh izdanih rumenih kartonov. Iz tega lahko tudi sklepamo, da je na vsaki tekmi povprečno izdanih 3,3 rumenih kartonov.
+
+
+```{r Sodniki rumen, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+Sodniki_rumen_karton
+```
+
+
+Tudi pri naslednjem grafu lahko vidimo, da so z rdečim kartonom večinoma nagrajeni gostujoči nogometaši.
+
+```{r Sodniki rdeč, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+stolpicni_graf_prejetih_rdecih_kartonov
+```
+
+Naslednji graf prikazuje seštevek vseh prekrškov. Opazimo lahko, da so ekipe, ki so storile največ prekrškov zelo uspešne. Vsi angleški velikani se nahajajo na vrhu grafa. Torej lahko sklepamo, da je agresiven pristop zelo pomemben pri zbiranju točk.
+
+
+```{r Prekrški, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+graf_prekrskov
+```
+
+Naslednja dva grafa nam prikazujeta trenutne trenerje in pa trenerje, ki so vsaj enkrat osvojili Premier league. Menjevanje trenerjev v tej ligi je nekaj povsem običajnega. Zato sem hotel s prvim grafom pokazati, kako kratke so dobe trenerje, graf se dnevno tudi sam posodablja. Na drugem grafu pa lahko vidimo dominacijo Sir Alexa Fergusona, ki je kar trinjastkrat osovojil naslov prvaka. 
+
+
+```{r Doba trenerjev, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+Trenutna_trenerska_doba
+```
+
+```{r trenerski prvaki, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+Najuspesnejsi_trenerji
+```
+
+
+Na naslednjem zemljevidu lahko vidimo približno lokacijo vseh klubov in število točk, ki so jih dosegli. Zaradi velikega števila klubov iz Londona sem tukaj upošteval samo povprečje vseh točk lodnovskih klubov in na zemljevidu označil celoten Greater London.
+
+```{r Celotni zemljevid, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+zemljevid_EngWal
+```
+
+
+Tukaj so na malo večjem zemljevidu prikazani klubi iz Londona. Podobno kot prej so tudi tu klubi razporejeni po številu osvojenih točk.
+
+```{r londonski klubi, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+zemljevid_london
+```
+
 
 ***
 
@@ -118,16 +174,29 @@ ggplot() + geom_polygon(data=left_join(zemljevid, povprecja, by=c("OB_UIME"="obc
 source("analiza/analiza.r", encoding="UTF-8")
 ```
 
-Spodnji graf prikazuje povezavo med številom naselij in površino občine.
 
-```{r graf, echo=FALSE, fig.align='center', fig.cap='Povezava med številom naselij in površino občine'}
-ggplot(inner_join(obcine, data.frame(obcina=names(skupine),
-                                     skupina=factor(skupine)), by="obcina")
-, aes(x=povrsina, y=naselja, color=skupina, size=prebivalci/1000)) + geom_point() +
-  ggtitle("Število naselij glede na površino občine") +
-  xlab(expression("Površina (km"^2 * ")")) + ylab("Št. naselij") +
-  guides(color=guide_legend(title="Skupina"),
-         size=guide_legend(title="Prebivalci (* 1000)"))
+Prednost domačega igrišča je vedno manj pomembni fakotor v Premier league. To lahko vidimo na spodnjem grafu, saj se število doseženih golov domače ekipe počasi zmanjšuje, število golov gostujoče ekipe pa se počasi dviguje. Težko je ugotoviti zakaj je do tega dejansko prišlo. Menim pa, da je razlogov več. Definitivno je vsako leto bolj priljubljena angleška prva liga in s tem je več turistov, ki prihajajo na domače tekme svojih ljubljenih ekip. Torej kot prvi razlog bi lahko navedel, da je vedno slabše vzdušje na stadionih. Drugi razlog je, da so zelenice na vseh stadionih pripravljene vrhunsko, kar včasih ni bilo tako in je posledično domača ekipa imela prednost, saj so bili vajeni svojega terena. Pojavljajo se tudi vedno večje razlike med najboljšimi klubi in tistimi, ki se borijo za obstanek. Zato so finančni vložki pri prvih ekipah veliko večji in posledično je večja razlika v kakovosti igralcev. Razlogov je verjetno še veliko več.
+
+```{r Napoved golov, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+Napoved_golov
+```
+
+
+Klube sem razverstil tudi po uspešnosti v 5 različnih skupin in prikazal zanimiv sever Anglije, osrednji del in pa London.
+
+
+
+```{r Sever Anglije, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+zemljevid_severne_ANGLIJE
+```
+
+
+```{r srednja Anglija, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+zemljevid_srednje_ANGLIJE
+```
+
+```{r London skupine, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+zemljevid_london_skupin
 ```
 
 ***

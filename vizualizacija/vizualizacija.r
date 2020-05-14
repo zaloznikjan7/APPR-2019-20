@@ -45,7 +45,7 @@ kartoni2 <- kartoni %>% gather(key= "Ekipa", value = "stevilo_kartonov")
 stolpicni_graf_prejetih_rumenih_kartonov <- ggplot(kartoni2,  aes(x= Ekipa, y = stevilo_kartonov, fill=Ekipa )) +
                               geom_col() + geom_text(aes(label = scales::percent(procent), y = procent, group = stevilo_kartonov),
                               position = position_dodge(width = 1.5), vjust = -0.5) +
-                              ylab("stevilo kartonov") + ggtitle("Primerjava prejetih rumenih kartonov domace in gostujoce ekipe") +
+                              ylab("število kartonov") + ggtitle("Primerjava prejetih rumenih kartonov domače in gostujoče ekipe") +
                               theme(panel.background=element_rect(fill="white"), plot.title=element_text(hjust=0.5))
 
 
@@ -68,7 +68,7 @@ Sodniki_rumeni_kartoni <- Sezone %>%
   arrange(povprecno_rumeni_karton)
 
 #### 4. graf, koliko rumenih kartonov dodeli sodnik na posamezni tekmi ####
-ggplot(Sodniki_rumeni_kartoni,aes(x= Sodniki_rumeni_kartoni$Sodnik,y= Sodniki_rumeni_kartoni$povprecno_rumeni_karton))+ geom_col() + coord_flip()+
+Sodniki_rumen_karton <- ggplot(Sodniki_rumeni_kartoni,aes(x= Sodniki_rumeni_kartoni$Sodnik,y= Sodniki_rumeni_kartoni$povprecno_rumeni_karton))+ geom_col() + coord_flip()+
   geom_hline(aes(yintercept = povprecno_rumenih_kartonov), color = "red")+ xlab("Sodnik") +
   ylab("stevilo rumenih kartonov") + ggtitle("Število dodeljenih rumenih kartonov v povprečju")
   
