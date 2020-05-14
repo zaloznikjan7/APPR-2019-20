@@ -132,7 +132,7 @@ Najuspesnejsi_trenerji <- (ggplot(stevilo_naslovov, aes(x=Trener, y=n)) + geom_p
 
 
 
-tocke <- Sezone %>%
+tocke <- Sezone %>% 
   transmute(Domaca_ekipa, Gostujoca_ekipa,
             Tocke_domaci=ifelse(Zadetki_domaca_ekipa > Zadetki_gostujoca_ekipa, 3,
                                 ifelse(Zadetki_domaca_ekipa == Zadetki_gostujoca_ekipa, 1, 0)),
@@ -153,8 +153,6 @@ UK <- uvozi.zemljevid("https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_GBR_sh
                       encoding="UTF-8")
 klubi <- c("Man United"="Manchester",
            "Man City" = "Salford",
-           "Chelsea"="Birmingham",
-           "Tottenham"="Bolton",
            "Stoke City" = "Stoke-on-Trent",
            "Bournemouth" = "Bournemouth",
            "Leicester" = "Leicester",
@@ -167,10 +165,8 @@ klubi <- c("Man United"="Manchester",
            "Birmingham" = "Birmingham",
            "Blackpool" = "Blackpool",
            "Blackburn" ="Blackburn with Darwen",
-           "Bolton" = "Bolton",
            "Reading" = "Reading",
            "Bristol" = "Bristol",
-           "Blackpool" = "Blackpool",
            "Huddersfield" = "Calderdale",
            "Everton" = "Sefton",
            "Aston Villa" = "Coventry",
@@ -224,8 +220,7 @@ klubi2 <- c(  "Arsenal" = "Hackney",
               "Crystal Palace" = "Croydon",
               "QPR" = "Ealing",
               "Tottenham" = "Enfield",
-              "Watford" = "Harrow"
-                )
+              "Watford" = "Harrow")
 
 Lond <- UK2[UK2$NAME_2 %in% c("Greater London"),]
 
