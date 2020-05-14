@@ -182,9 +182,11 @@ Napoved_golov
 ```
 
 
-Klube sem razverstil tudi po uspešnosti v 5 različnih skupin in prikazal zanimiv sever Anglije, osrednji del in pa London.
+Klube sem razverstil tudi po uspešnosti v 5 različnih skupin in prikazal podrobneje zanimiv sever Anglije, osrednji del in pa London.
 
-
+```{r Anglija in Wales, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+zemljevid_AngWal
+```
 
 ```{r Sever Anglije, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
 zemljevid_severne_ANGLIJE
@@ -199,8 +201,3 @@ zemljevid_srednje_ANGLIJE
 zemljevid_london_skupin
 ```
 
-***
-
-```{r shiny, echo=FALSE}
-shinyAppDir("shiny", options=list(width="100%", height=600))
-```
