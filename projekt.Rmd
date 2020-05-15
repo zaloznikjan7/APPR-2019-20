@@ -106,7 +106,7 @@ Primerjava_zadetkov_domace_gostujoce_ekipe_graf
 Na naslednjem grafu sem predstavil, najuspešnejše ekipe v tem obdobju. Vidimo lahko, da je Manchester City edino moštvo, ki je skupaj pridobilo več kot 800 točk. Na dnu grafa pa lahko vidimo Middlesbrough, ki je med elito "preživel" samo dve sezoni. V uspešnosti pa izstopa prvih 6 moštev ali kot jim v Veliki Britaniji pravijo "The big six". Na preskoku je pa tudi Everton, ki se počasi bliža nivoju najboljših v Premier league. Kot 7. uvršeno moštvo pa lahko vidimo Stoke City, ki pa je leta 2018 izpadlo iz najmočnejše lige na svetu.
 
 
-```{r Najuspešnejše ekipe, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+```{r Najuspesnejse ekipe, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
 Najuspesnejse_ekipe
 ```
 
@@ -129,14 +129,14 @@ Sodniki_rumen_karton
 
 Tudi pri naslednjem grafu lahko vidimo, da so z rdečim kartonom večinoma nagrajeni gostujoči nogometaši.
 
-```{r Sodniki rdeč, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+```{r Sodniki rdec, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
 stolpicni_graf_prejetih_rdecih_kartonov
 ```
 
 Naslednji graf prikazuje seštevek vseh prekrškov. Opazimo lahko, da so ekipe, ki so storile največ prekrškov zelo uspešne. Vsi angleški velikani se nahajajo na vrhu grafa. Torej lahko sklepamo, da je agresiven pristop zelo pomemben pri zbiranju točk.
 
 
-```{r Prekrški, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
+```{r Prekrski, echo=FALSE, fig.align='center',message=FALSE, warning=FALSE}
 graf_prekrskov
 ```
 

@@ -23,19 +23,21 @@ skupine <- data.frame(Ekipa=tocke_domaci_gosti$Ekipa,
 
 tocke_regije3 <- skupine %>% inner_join(klubi.regija) %>%
   group_by(Regija) %>% summarise(Ekipa=unique(Ekipa) %>% sort() %>% paste(collapse=", "),
-                                 Skupina=unique(Skupina) %>% sort() %>% paste(collapse=", "),
-                                 Stevilo=n())
+                                 Skupina=ifelse(n() == 1, paste(Skupina), "London"))
 
 
 zem.tocke3 <- merge(EngWal, tocke_regije3, by.x="NAME_2", by.y="Regija")
-zemljevid_skupin <- tm_shape(zem.tocke3) + tm_polygons("Skupina")
+tocke_brezLondona <- tocke_regije3 %>% filter(Skupina != "London")
+zem.tocke3_brezLondona <- merge(EngWal, tocke_brezLondona, by.x="NAME_2", by.y="Regija")
+
+
 
 zemljevid_AngWal <- tm_shape(zem.tocke3) + tm_polygons("Skupina") + tm_legend(show=TRUE)
 
-zemljevid_severne_ANGLIJE <- tm_shape(zem.tocke3, xlim=c(-3.2, -1.7), ylim=c(53.3, 53.9)) + tm_polygons("Skupina") +
+zemljevid_severne_ANGLIJE <- tm_shape(zem.tocke3_brezLondona, xlim=c(-3.2, -1.7), ylim=c(53.3, 53.9)) + tm_polygons("Skupina") +
   tm_legend(show=TRUE) + tm_text("Ekipa", size=0.7)
 
-zemljevid_srednje_ANGLIJE <- tm_shape(zem.tocke3, xlim=c(-2.2, -1), ylim=c(52.3, 52.9)) + tm_polygons("Skupina") +
+zemljevid_srednje_ANGLIJE <- tm_shape(zem.tocke3_brezLondona, xlim=c(-2.2, -1), ylim=c(52.3, 52.9)) + tm_polygons("Skupina") +
   tm_legend(show=TRUE) + tm_text("Ekipa", size=0.7)
 
 
